@@ -107,3 +107,29 @@ details label { margin-bottom:16px; }
 .reader-tools label { width:200px; }
 .pagination { margin-top:24px; }
 @media(max-width:759px) { .metadata { grid-template-columns:repeat(2,minmax(0,1fr)); padding:16px; } .metadata>label:nth-of-type(1),.metadata>label:nth-of-type(2) { grid-column:span 2; } .library-tools,.section-top { grid-template-columns:1fr; } .section-editor { padding:16px; } .reading-surface { padding:16px; } .page-heading,.editor-heading { gap:16px; } .editor-heading h1 { margin-bottom:8px; } }
+.book-config { background:var(--surface); }
+.book-fields { display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:16px; }
+.layout-fields { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:16px; margin-top:16px; }
+.book-picker { list-style:none; padding:0; max-height:320px; overflow:auto; }
+.book-picker li { display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding:16px 0; }
+.book-picker li span { min-width:0; overflow-wrap:anywhere; }
+.book-picker button { max-width:100%; overflow-wrap:anywhere; text-align:left; }
+.book-repertoire { margin:32px 0; }
+.book-item-list { list-style:none; padding:0; margin:0; }
+.book-item-list>li { background:var(--surface); border:1px solid var(--border); border-radius:12px; margin-bottom:16px; padding:24px; }
+.book-item-title { display:flex; gap:16px; margin-bottom:16px; }
+.book-item-title>div { min-width:0; overflow-wrap:anywhere; }
+.book-item-title p { font-size:14px; color:var(--muted); margin:4px 0; }
+.book-item-list label { margin:16px 0 8px; }
+.preview-summary,.pdf-controls { display:flex; flex-wrap:wrap; gap:16px; align-items:end; margin-bottom:24px; }
+.pdf-controls label { min-width:100px; max-width:200px; }
+.pdf-viewport { width:100%; max-width:950px; min-height:240px; overflow:auto; border:1px solid var(--border); background:var(--surface-muted); padding:0; }
+.pdf-viewport canvas { display:block; max-width:none; background:white; }
+.pdf-page-text { white-space:pre-wrap; overflow-wrap:anywhere; }
+.pdf-index { padding-left:24px; }
+.pdf-index li { margin-bottom:8px; }
+.export-hash { overflow-wrap:anywhere; font:12px/1.8 Consolas,monospace; }
+.page-heading h1 { overflow-wrap:anywhere; }
+.page-heading>div { min-width:0; }
+.pdf-index button { max-width:100%; overflow-wrap:anywhere; text-align:left; }
+@media(max-width:759px){.layout-fields { grid-template-columns:repeat(2,minmax(0,1fr)); }.book-config,.book-item-list>li { padding:16px; }.book-item-title { gap:8px; }.pdf-index { padding-left:16px; }}

@@ -1,9 +1,9 @@
 # StrumLab
 
 Da música ao seu cancioneiro. Aplicação local em Next.js/TypeScript, Java 21/Spring Boot
-e PostgreSQL. **Fases 1 e 2 implementadas:** fundação, biblioteca, editor de cifras,
-rascunhos, revisões imutáveis, transposição, capo e ChordPro básico.
-Livros, PDF, áudio e integrações ficam nas fases correspondentes.
+e PostgreSQL. **Fases 1–3 implementadas:** fundação, biblioteca/editor, rascunhos,
+revisões imutáveis, transposição, capo, ChordPro básico e cancioneiros com prévia/PDF.
+Áudio e integrações ficam nas fases correspondentes.
 
 ## Executar localmente
 
@@ -36,6 +36,8 @@ O banco fica em `127.0.0.1:5433`. Senha e token privado aleatórios ficam em `.e
 ignorado pelo Git. `scripts/web.mjs` carrega a configuração no processo Next.js;
 o token não é enviado ao navegador. Ao atualizar uma instalação da Fase 1,
 rode `node scripts/init-env.mjs` novamente para adicionar o token sem alterar a senha.
+Fontes licenciadas do PDF ficam em `assets/fonts`. O launcher prepara o worker local
+de PDF.js automaticamente; a exportação PDFKit não requer Chromium em runtime.
 Não exponha esse protótipo na rede ou publique bibliotecas sem autenticação.
 
 ## Verificar
@@ -99,3 +101,6 @@ os dados permanecem no volume. API e frontend encerram com Ctrl+C.
 - [Prompt da Fase 1](StrumLab-documentacao-v1.1/prompts/01-fase-1-fundacao.md)
 - [Prompt da Fase 2](StrumLab-documentacao-v1.1/prompts/02-fase-2-biblioteca-editor.md)
 - [Contrato do editor e limites locais](docs/editor.md)
+- [Prompt da Fase 3](StrumLab-documentacao-v1.1/prompts/03-fase-3-cancioneiros.md)
+- [Contrato dos cancioneiros](docs/cancioneiros.md)
+- [Comparação dos motores de PDF](docs/pdf-spike.md)

@@ -84,3 +84,28 @@ Status D-018–D-021: **escolhas técnicas implementadas na fase local autorizad
 reavaliar antes de publicação. Limites/gramática/subset no contrato `docs/editor.md`
 do repositório. Não houve aprovação de hosting, PDF definitivo, licenças de samples,
 integrações, compartilhamento ou fases futuras.
+
+## Continuação — 14/10/2026 — Fase 3
+
+Escopo autorizado pelo usuário: prosseguir após a indicação de cancioneiros/PDF
+como próximo gate. Escolhas técnicas sob responsabilidade do agente, dentro do
+prompt 03. Não houve contratação/deploy ou aprovação de recursos de fases posteriores.
+
+- **D-009, conclusão do spike local:** PDFKit selecionado para o protótipo após
+  comparação real com Chromium nas mesmas trinta músicas, A4/1–2 colunas, índice,
+  Unicode e imagens renderizadas. Ambos passaram; PDFKit evitou browser em runtime
+  e gerou arquivos menores. Escolha aplicada à fase autorizada; hosting permanece
+  pendente. Registro original preservado como histórico e comparação em
+  `docs/pdf-spike.md` do repositório.
+- **D-022:** PDF.js lê os bytes persistidos do PDF, em vez de gerar uma segunda
+  representação HTML para prévia. Consequência: prévia e download têm mesmo arquivo/hash.
+- **D-023:** Exportação local com manifesto imutável, lease e PDF em BYTEA no
+  PostgreSQL. Alternativa: blobs em storage externo. Evita contratar infraestrutura
+  nesta fase; reavaliar quotas/storage antes de publicação.
+- **D-024:** Noto Sans/Serif e fallbacks licenciados OFL-1.1, com commits/hashes.
+  Alternativa: depender de fontes do sistema. Fontes incluídas para preservar glyphs
+  e métricas; caractere sem cobertura gera validação, não descarte.
+
+D-022–D-024: escolhas técnicas implementadas no protótipo da fase autorizada.
+A4 retrato segue o prompt; categorias/paisagem e snapshots de batida de D-015 ainda
+não foram implementados. Token local segue D-020; não aprova autenticação pública.

@@ -49,3 +49,14 @@ Gate local aprovado: 49 testes, lint, tipos e build. Evidências e limitações 
 [registro de execução](../../docs/execucao.md), contrato em [editor.md](../../docs/editor.md).
 CI preparado, não executado remotamente. Fases 3–6 não implementadas.
 Próximo gate: prompt 03, Cancioneiros, incluindo spike da renderização PDF.
+
+## Continuação — 14/10/2026 — Fase 3
+
+Cancioneiros implementados: revisão fixada, ordenação atômica por drag/botões,
+capa/texto/imagem, A4/1–2 colunas, índice real, PDF persistido e prévia dos mesmos bytes.
+Spike PDFKit/Chromium executado antes da seleção do motor. Gate local validado:
+59 testes, lint, tipos, build e renderização/inspeção PDF, com PostgreSQL separado.
+Evidências em [execucao.md](../../docs/execucao.md), contrato em
+[cancioneiros.md](../../docs/cancioneiros.md). Fases 4–6 não implementadas.
+Próximo gate: Fase 4 — biblioteca de batidas, com origem/licenças de samples de
+violão real verificadas antes de disponibilizar áudio.

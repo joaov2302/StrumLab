@@ -1,6 +1,36 @@
 {
-  "name": "@strumlab/web", "version": "0.1.0", "private": true, "type": "module",
-  "scripts": {"dev":"node ../../scripts/web.mjs dev", "build":"node ../../scripts/web.mjs build", "start":"node ../../scripts/web.mjs start", "lint":"eslint .", "typecheck":"tsc --noEmit", "test":"vitest run", "test:e2e":"playwright test"},
-  "dependencies": {"next":"16.4.0", "react":"19.3.0", "react-dom":"19.3.0"},
-  "devDependencies": {"typescript":"^5.9.3", "@types/node":"^24.0.0", "@types/react":"^19.0.0", "@types/react-dom":"^19.0.0", "eslint":"^9.0.0", "eslint-config-next":"16.4.0", "vitest":"^4.0.0", "@playwright/test":"^1.56.0", "openapi-typescript":"^7.10.0"}
+  "name": "@strumlab/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../scripts/web.mjs dev",
+    "build": "node ../../scripts/web.mjs build",
+    "start": "node ../../scripts/web.mjs start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "fontkit": "^2.0.4",
+    "next": "16.4.0",
+    "pdfjs-dist": "^6.4.299",
+    "pdfkit": "^0.20.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/fontkit": "^2.0.9",
+    "@types/node": "^24.0.0",
+    "@types/pdfkit": "^0.17.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.4.0",
+    "openapi-typescript": "^7.10.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0"
+  }
 }

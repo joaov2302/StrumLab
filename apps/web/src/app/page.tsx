@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { HealthStatus } from '@/components/health-status';
 const modules = [
   { href: '/musicas', number: '02', title: 'Sua biblioteca de cifras', text: 'Um lugar para escrever, revisar e encontrar seu repertório.', phase: 'Disponível · Biblioteca e editor' },
-  { href: '/cancioneiros', number: '03', title: 'Repertórios que viram livros', text: 'Reúna músicas na ordem do ensaio e prepare seu cancioneiro.', phase: 'Fase 3 · Em preparação' },
+  { href: '/cancioneiros', number: '03', title: 'Repertórios que viram livros', text: 'Reúna músicas na ordem do ensaio e prepare seu cancioneiro.', phase: 'Disponível · Montagem, prévia e PDF' },
   { href: '/batidas', number: '04', title: 'Seu próximo ritmo', text: 'Pratique modelos de batida com violão e metrônomo.', phase: 'Fase 4 · Em preparação' },
 ];
 export default function Home() {

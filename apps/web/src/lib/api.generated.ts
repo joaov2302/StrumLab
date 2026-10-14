@@ -125,6 +125,170 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/songbooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listBooks"];
+        put?: never;
+        post: operations["createBook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get: operations["getBook"];
+        put: operations["updateBook"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["archiveBook"];
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addBookItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/items/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["reorderBook"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["removeBookItem"];
+        options?: never;
+        head?: never;
+        patch: operations["updateBookItem"];
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["beginBookExport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/exports/{exportId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        get: operations["getBookExport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/exports/{exportId}/result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["completeBookExport"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["failBookExport"];
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/exports/{exportId}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        get: operations["getBookPdf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -221,6 +385,119 @@ export interface components {
             status: number;
             title: string;
             detail: string;
+        };
+        BookCover: {
+            enabled: boolean;
+            imageData: string;
+            /** @enum {string} */
+            imageRights: "unspecified" | "own" | "permission";
+        };
+        BookLayout: {
+            /** @enum {string} */
+            font: "sans" | "serif";
+            fontSize: number;
+            marginMm: number;
+            lineSpacing: number;
+            /** @enum {integer} */
+            columns: 1 | 2;
+        };
+        BookConfig: {
+            title: string;
+            subtitle: string;
+            organizer: string;
+            cover: components["schemas"]["BookCover"];
+            layout: components["schemas"]["BookLayout"];
+        };
+        BookSummary: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            subtitle: string;
+            archived: boolean;
+            version: number;
+            itemCount: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        BookItem: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            songId: string;
+            /** Format: uuid */
+            revisionId: string;
+            revisionNo: number;
+            position: number;
+            notes: string;
+            content: components["schemas"]["SongContent"];
+            /** Format: uuid */
+            latestRevisionId: string | null;
+            songArchived: boolean;
+        };
+        BookPage: {
+            items: components["schemas"]["BookSummary"][];
+            total: number;
+        };
+        BookDetail: {
+            book: components["schemas"]["BookSummary"];
+            config: components["schemas"]["BookConfig"];
+            items: components["schemas"]["BookItem"][];
+            exports: components["schemas"]["BookExport"][];
+        };
+        BookPageIndex: {
+            /** Format: uuid */
+            itemId: string;
+            title: string;
+            page: number;
+            revisionNo: number;
+        };
+        BookExport: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            songbookId: string;
+            bookVersion: number;
+            manifestHash: string;
+            rendererVersion: string;
+            /** @enum {string} */
+            status: "pending" | "completed" | "failed";
+            pageCount: number | null;
+            pageIndex: components["schemas"]["BookPageIndex"][];
+            pdfSha256: string | null;
+            errorCode: string | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        BookManifestItem: {
+            /** Format: uuid */
+            itemId: string;
+            /** Format: uuid */
+            songId: string;
+            /** Format: uuid */
+            revisionId: string;
+            revisionNo: number;
+            content: components["schemas"]["SongContent"];
+            notes: string;
+        };
+        BookManifest: {
+            /** @enum {integer} */
+            schemaVersion: 1;
+            rendererVersion: string;
+            /** Format: uuid */
+            songbookId: string;
+            bookVersion: number;
+            title: string;
+            subtitle: string;
+            organizer: string;
+            cover: components["schemas"]["BookCover"];
+            layout: components["schemas"]["BookLayout"];
+            items: components["schemas"]["BookManifestItem"][];
+        };
+        BookRenderClaim: {
+            export: components["schemas"]["BookExport"];
+            manifest: components["schemas"]["BookManifest"];
+            /** Format: uuid */
+            leaseToken: string | null;
         };
     };
     responses: never;
@@ -971,6 +1248,1214 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    listBooks: {
+        parameters: {
+            query?: {
+                q?: string;
+                status?: "active" | "archived" | "all";
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookPage"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    createBook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookConfig"];
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    getBook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    updateBook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                    config: components["schemas"]["BookConfig"];
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    archiveBook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                    archived: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    addBookItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                    /** Format: uuid */
+                    songId: string;
+                    /** Format: uuid */
+                    revisionId: string;
+                    duplicate: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    reorderBook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                    itemIds: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    removeBookItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    updateBookItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                    /** Format: uuid */
+                    revisionId: string;
+                    notes: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    beginBookExport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    version: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookRenderClaim"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    getBookExport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookExport"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    completeBookExport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    leaseToken: string;
+                    manifestHash: string;
+                    pdfBase64: string;
+                    pageCount: number;
+                    pageIndex: components["schemas"]["BookPageIndex"][];
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookExport"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    failBookExport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    leaseToken: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Operação concluída */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookExport"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    getBookPdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                exportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bytes do PDF persistido */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
                 };
             };
         };

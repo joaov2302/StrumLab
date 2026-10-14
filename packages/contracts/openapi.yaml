@@ -576,6 +576,973 @@ paths:
                 $ref: '#/components/schemas/SongProblem'
       security:
         - LocalProxyToken: []
+  /api/v1/songbooks:
+    get:
+      operationId: listBooks
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookPage'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - active
+              - archived
+              - all
+        - in: query
+          name: offset
+          schema:
+            type: integer
+    post:
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookConfig'
+      responses:
+        '201':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getBook
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+    put:
+      operationId: updateBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+                - config
+              properties:
+                version:
+                  type: integer
+                config:
+                  $ref: '#/components/schemas/BookConfig'
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+    patch:
+      operationId: archiveBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+                - archived
+              properties:
+                version:
+                  type: integer
+                archived:
+                  type: boolean
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/items:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: addBookItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+                - songId
+                - revisionId
+                - duplicate
+              properties:
+                version:
+                  type: integer
+                songId:
+                  type: string
+                  format: uuid
+                revisionId:
+                  type: string
+                  format: uuid
+                duplicate:
+                  type: boolean
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/items/order:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      operationId: reorderBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+                - itemIds
+              properties:
+                version:
+                  type: integer
+                itemIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/items/{itemId}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: itemId
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      operationId: updateBookItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+                - revisionId
+                - notes
+              properties:
+                version:
+                  type: integer
+                revisionId:
+                  type: string
+                  format: uuid
+                notes:
+                  type: string
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+    delete:
+      operationId: removeBookItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+              properties:
+                version:
+                  type: integer
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/exports:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: beginBookExport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+              properties:
+                version:
+                  type: integer
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookRenderClaim'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/exports/{exportId}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: exportId
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getBookExport
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookExport'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/exports/{exportId}/result:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: exportId
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      operationId: completeBookExport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - leaseToken
+                - manifestHash
+                - pdfBase64
+                - pageCount
+                - pageIndex
+              properties:
+                leaseToken:
+                  type: string
+                  format: uuid
+                manifestHash:
+                  type: string
+                pdfBase64:
+                  type: string
+                pageCount:
+                  type: integer
+                pageIndex:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/BookPageIndex'
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookExport'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+    patch:
+      operationId: failBookExport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - leaseToken
+              properties:
+                leaseToken:
+                  type: string
+                  format: uuid
+              additionalProperties: false
+      responses:
+        '200':
+          description: Operação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookExport'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/exports/{exportId}/pdf:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: exportId
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getBookPdf
+      security:
+        - LocalProxyToken: []
+      responses:
+        '200':
+          description: Bytes do PDF persistido
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
 components:
   schemas:
     Health:
@@ -854,6 +1821,329 @@ components:
           type: string
         detail:
           type: string
+    BookCover:
+      type: object
+      required:
+        - enabled
+        - imageData
+        - imageRights
+      properties:
+        enabled:
+          type: boolean
+        imageData:
+          type: string
+        imageRights:
+          type: string
+          enum:
+            - unspecified
+            - own
+            - permission
+      additionalProperties: false
+    BookLayout:
+      type: object
+      required:
+        - font
+        - fontSize
+        - marginMm
+        - lineSpacing
+        - columns
+      properties:
+        font:
+          type: string
+          enum:
+            - sans
+            - serif
+        fontSize:
+          type: integer
+          minimum: 9
+          maximum: 16
+        marginMm:
+          type: integer
+          minimum: 10
+          maximum: 25
+        lineSpacing:
+          type: number
+          minimum: 1
+          maximum: 1.6
+        columns:
+          type: integer
+          enum:
+            - 1
+            - 2
+      additionalProperties: false
+    BookConfig:
+      type: object
+      required:
+        - title
+        - subtitle
+        - organizer
+        - cover
+        - layout
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        subtitle:
+          type: string
+          maxLength: 300
+        organizer:
+          type: string
+          maxLength: 200
+        cover:
+          $ref: '#/components/schemas/BookCover'
+        layout:
+          $ref: '#/components/schemas/BookLayout'
+      additionalProperties: false
+    BookSummary:
+      type: object
+      required:
+        - id
+        - title
+        - subtitle
+        - archived
+        - version
+        - itemCount
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        subtitle:
+          type: string
+        archived:
+          type: boolean
+        version:
+          type: integer
+        itemCount:
+          type: integer
+        updatedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    BookItem:
+      type: object
+      required:
+        - id
+        - songId
+        - revisionId
+        - revisionNo
+        - position
+        - notes
+        - content
+        - latestRevisionId
+        - songArchived
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        revisionId:
+          type: string
+          format: uuid
+        revisionNo:
+          type: integer
+        position:
+          type: integer
+        notes:
+          type: string
+        content:
+          $ref: '#/components/schemas/SongContent'
+        latestRevisionId:
+          type: string
+          format: uuid
+          nullable: true
+        songArchived:
+          type: boolean
+      additionalProperties: false
+    BookPage:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookSummary'
+        total:
+          type: integer
+      additionalProperties: false
+    BookDetail:
+      type: object
+      required:
+        - book
+        - config
+        - items
+        - exports
+      properties:
+        book:
+          $ref: '#/components/schemas/BookSummary'
+        config:
+          $ref: '#/components/schemas/BookConfig'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookItem'
+        exports:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookExport'
+      additionalProperties: false
+    BookPageIndex:
+      type: object
+      required:
+        - itemId
+        - title
+        - page
+        - revisionNo
+      properties:
+        itemId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        page:
+          type: integer
+        revisionNo:
+          type: integer
+      additionalProperties: false
+    BookExport:
+      type: object
+      required:
+        - id
+        - songbookId
+        - bookVersion
+        - manifestHash
+        - rendererVersion
+        - status
+        - pageCount
+        - pageIndex
+        - pdfSha256
+        - errorCode
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        songbookId:
+          type: string
+          format: uuid
+        bookVersion:
+          type: integer
+        manifestHash:
+          type: string
+        rendererVersion:
+          type: string
+        status:
+          type: string
+          enum:
+            - pending
+            - completed
+            - failed
+        pageCount:
+          type: integer
+          nullable: true
+        pageIndex:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookPageIndex'
+        pdfSha256:
+          type: string
+          nullable: true
+        errorCode:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    BookManifestItem:
+      type: object
+      required:
+        - itemId
+        - songId
+        - revisionId
+        - revisionNo
+        - content
+        - notes
+      properties:
+        itemId:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        revisionId:
+          type: string
+          format: uuid
+        revisionNo:
+          type: integer
+        content:
+          $ref: '#/components/schemas/SongContent'
+        notes:
+          type: string
+      additionalProperties: false
+    BookManifest:
+      type: object
+      required:
+        - schemaVersion
+        - rendererVersion
+        - songbookId
+        - bookVersion
+        - title
+        - subtitle
+        - organizer
+        - cover
+        - layout
+        - items
+      properties:
+        schemaVersion:
+          type: integer
+          enum:
+            - 1
+        rendererVersion:
+          type: string
+        songbookId:
+          type: string
+          format: uuid
+        bookVersion:
+          type: integer
+        title:
+          type: string
+        subtitle:
+          type: string
+        organizer:
+          type: string
+        cover:
+          $ref: '#/components/schemas/BookCover'
+        layout:
+          $ref: '#/components/schemas/BookLayout'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookManifestItem'
+      additionalProperties: false
+    BookRenderClaim:
+      type: object
+      required:
+        - export
+        - manifest
+        - leaseToken
+      properties:
+        export:
+          $ref: '#/components/schemas/BookExport'
+        manifest:
+          $ref: '#/components/schemas/BookManifest'
+        leaseToken:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
   securitySchemes:
     LocalProxyToken:
       type: apiKey

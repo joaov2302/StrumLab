@@ -1,9 +1,9 @@
 # Estado real da implementação
 
-Data: 14/10/2026. Estado atual: **Fases 1 e 2 validadas localmente**.
+Data: 14/10/2026. Estado atual: **Fases 1–3 validadas localmente**.
 Stack e protótipo local de usuário único confirmados; continuação para biblioteca/editor
 autorizada pelo usuário após a entrega da fundação. Registros abaixo preservam o
-histórico; a seção Fase 2 apresenta o gate atual.
+histórico; a seção Fase 3 apresenta o gate atual.
 
 ## Análise inicial
 
@@ -166,3 +166,79 @@ continuam registrados; nenhuma vulnerabilidade de produção foi reportada.
 Contrato e limites: [editor.md](editor.md). Próximo gate: **Fase 3 — Cancioneiros**,
 com revisão do prompt 03 e spike do renderer de PDF antes de fixar tecnologia.
 Livros, PDF, batidas e análise não foram antecipados nesta entrega.
+
+## Entrega da Fase 3 — cancioneiros, prévia e PDF
+
+Autorização: usuário pediu continuidade após a Fase 2 e indicação do gate 3.
+Foram lidos prompt 03, regras, roadmap/decisões, modelos, cancioneiros, testes e
+contratos visuais. Aplicada a skill PDF para comparação, renderização e inspeção.
+Nenhum conteúdo do PDF editorial de referência foi copiado.
+
+- Spike documentado antes de selecionar o motor: PDFKit versus Chromium sobre
+  trinta músicas autorais/sintéticas, A4, 1/2 colunas, índice real e Unicode.
+- Migration V3: Songbook, SongbookItem e SongbookExport; revisão pertencente à
+  música por FK composta; posição única adiável; manifesto e PDFs completos protegidos
+  por trigger contra alteração/exclusão.
+- Biblioteca de livros com criação, busca/paginação, renomear, arquivar/reabrir.
+- Montagem com revisão selecionada/fixada, reordenação drag/botões, duplicação
+  explícita, remoção e notas. Atualização de revisão exige ação seletiva por item.
+- Capa opcional com título/subtítulo/organizador e imagem local autorizada declarada;
+  PNG/JPEG validado por formato real, dimensões e decodificação.
+- Layout A4 retrato, Noto Sans/Serif, margem/fonte/espaçamento e 1/2 colunas.
+  Fontes oficiais com commits, hashes e licenças OFL-1.1 versionados; glyphs de
+  símbolos/emoji com fallback monocromático e erro explícito se ausentes.
+- PDFKit renderiza no servidor Next.js, com paginação explícita e índice reconciliado.
+  Manifesto, hash, arquivo/índice/páginas e SHA-256 ficam no PostgreSQL privado.
+- Prévia PDF.js dos mesmos bytes do download, com páginas, zoom, índice navegável,
+  texto extraído e identificação da exportação. Edição do livro invalida a prévia atual;
+  PDFs anteriores permanecem rotulados como históricos.
+- Lease e chave única do manifesto permitem repetição segura após falha sem
+  exportações duplicadas. O navegador não recebe lease e não acessa endpoint result.
+- Listagem de históricos busca só metadados, evitando ler blobs PDF de todos os livros.
+
+### Validações da Fase 3
+
+| Verificação | Resultado |
+|---|---|
+| Maven Wrapper verify | 16 unitários + 8 integrações aprovados, PostgreSQL separado |
+| Migration V3 | Aplicada/validada no banco de testes e principal; dados anteriores preservados |
+| Itens | Uma música em dois livros; ordem persiste; revisão continua fixada; atualização seletiva |
+| Integridade | Reordenação rejeita itens repetidos e versão antiga; FK de música/revisão correta |
+| Ownership | Livro e revisão de outro workspace negados; livro vazio não exporta |
+| Snapshot/export | Manifesto/bytes completos imutáveis; lease/retry/idempotência; histórico não muda |
+| Vitest | 25 testes aprovados, incluindo plano A4/índice/limites, determinismo lógico e glyphs |
+| Playwright | 10 cenários aprovados no build de produção, sem skips; fluxo PDF e falha/retry |
+| Bytes PDF | Download e arquivo persistido com mesmo SHA-256; prévia usa esse arquivo |
+| Spike | Quatro PDFs, trinta músicas, 40/37 páginas no protótipo 1/2 colunas; índice e Unicode verificados |
+| PDF final de QA | Quatro páginas, capa com PNG próprio, música longa em 2 colunas, acentos/setas/emoji |
+| Render/inspeção | pypdf/PyMuPDF e Poppler pdfinfo/pdftoppm; PNGs de capa e páginas musicais inspecionadas |
+| UI | Montagem/prévia em 360/390/1440 px, sem overflow ou erros JavaScript |
+| Lint/typecheck/build | Aprovados; worker de terceiros gerado excluído do lint |
+| Auditoria npm produção | Zero vulnerabilidades |
+
+Total: **59 testes automatizados** (24 Java, 25 Vitest, 10 Playwright). Cenário de
+recuperação do health usa simulação; jornadas de livros usam API e PostgreSQL reais.
+Fixtures de biblioteca/cancioneiro/PDF usadas somente em strumlab_test, com API/Next
+temporários em 8081/3002. Serviços temporários encerrados; principais 8080/3000 ativados.
+Evidências intermediárias permanecem em `.cache/`, fora do Git.
+
+Ocorrências de ambiente: Python/pip teve conexão interrompida; wheels oficiais foram
+baixados via Node e instalados na pasta de QA do workspace. Poppler portátil foi
+instalado nessa mesma área para renderização, sem instalação global. Um check de
+índice foi ajustado para normalizar quebras de título; era comparação textual de
+texto extraído, sem erro de paginação. Tipo de OpenTypeFeatures corrigido conforme
+namespace das definições PDFKit. Lint passou a ignorar apenas worker minificado copiado
+da dependência, mantendo as verificações nos arquivos autorais.
+
+### Limitações e próximo gate
+
+CI atualizado mas não executado remotamente; nenhum commit/push, contratação ou deploy.
+Aplicação local, sem identidade pública. Não há PDF/UA/tagging nem auditoria integral
+de leitor de tela, Firefox/Safari ou impressão física. Categorias e paisagem não foram
+ativadas; PDF começa cada item numa página própria. Preview não tem miniaturas/editor
+WYSIWYG. Limites locais e detalhes em [cancioneiros.md](cancioneiros.md), escolha do motor
+em [pdf-spike.md](pdf-spike.md). Alertas dev de lint da Fase 1 permanecem registrados.
+
+Próximo gate: **Fase 4 — biblioteca de batidas**, com samples reais de violão e suas
+fontes/licenças verificadas, além de metrônomo/player/sincronização. Nenhum áudio,
+sample de terceiros, análise musical ou integração foi implementado nesta fase.
