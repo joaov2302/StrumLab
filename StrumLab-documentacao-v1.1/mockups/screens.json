@@ -1,0 +1,72 @@
+[
+  {
+    "id": "inicio",
+    "name": "Início",
+    "phase": 1
+  },
+  {
+    "id": "musicas",
+    "name": "Músicas",
+    "phase": 2
+  },
+  {
+    "id": "editor",
+    "name": "Editor de cifra",
+    "phase": 2
+  },
+  {
+    "id": "leitura",
+    "name": "Leitura de cifra",
+    "phase": 2
+  },
+  {
+    "id": "cancioneiros",
+    "name": "Cancioneiros",
+    "phase": 3
+  },
+  {
+    "id": "montagem",
+    "name": "Montagem do cancioneiro",
+    "phase": 3
+  },
+  {
+    "id": "previa",
+    "name": "Prévia e PDF",
+    "phase": 3
+  },
+  {
+    "id": "batidas",
+    "name": "Biblioteca de batidas",
+    "phase": 4
+  },
+  {
+    "id": "pratica",
+    "name": "Prática Pop / Folk",
+    "phase": 4
+  },
+  {
+    "id": "analise",
+    "name": "Análise de áudio",
+    "phase": 5
+  },
+  {
+    "id": "playlists",
+    "name": "Importação de playlist",
+    "phase": 6
+  },
+  {
+    "id": "preferencias",
+    "name": "Preferências",
+    "phase": 1
+  },
+  {
+    "id": "acesso",
+    "name": "Acesso — condicional",
+    "phase": 1
+  },
+  {
+    "id": "estados",
+    "name": "Estados e recuperação",
+    "phase": 1
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "name": "StrumLab · Papel & Cordas",
+  "description": "Proposta editorial musical: papel quente, verde profundo e cobre. Organização de workspace inspirada na referência estática Notion, com leitura de cifras e prática de ritmo no centro.",
+  "preview": {
+    "brandName": "StrumLab",
+    "eyebrow": "Da música ao seu cancioneiro",
+    "title": "Seu repertório, no seu ritmo.",
+    "subtitle": "Escreva cifras. Prepare encontros. Pratique no violão.",
+    "body": "Reúna suas músicas, ajuste tom e capotraste e transforme o repertório em um cancioneiro legível. A biblioteca de batidas conecta setas, metrônomo e som de violão.",
+    "navigation": [
+      "Início",
+      "Músicas",
+      "Cancioneiros",
+      "Batidas"
+    ],
+    "primaryAction": "Criar cifra",
+    "secondaryAction": "Explorar batidas",
+    "features": [
+      {
+        "title": "Cifras que você controla",
+        "body": "Acordes estruturados, transposição e revisões preservadas."
+      },
+      {
+        "title": "Cancioneiros para levar",
+        "body": "Ordem, capa, índice e prévia antes do PDF."
+      },
+      {
+        "title": "Pratique o movimento",
+        "body": "Pop / Folk com setas e metrônomo. Áudio real depende de amostras licenciadas."
+      }
+    ]
+  },
+  "tokens": {
+    "colors": {
+      "accent": "#A34F2C",
+      "background": "#F5F3EC",
+      "border": "#858A7D",
+      "foreground": "#202A24",
+      "foregroundMuted": "#566157",
+      "primary": "#244F3C",
+      "primaryForeground": "#FFFFFF",
+      "secondary": "#E8EDE4",
+      "secondaryForeground": "#244F3C",
+      "surface": "#FFFFFF",
+      "surfaceMuted": "#EEECE3"
+    },
+    "radii": {
+      "full": "999px",
+      "lg": "20px",
+      "md": "12px",
+      "sm": "8px"
+    },
+    "shadows": {
+      "lg": "0 24px 64px rgba(32,42,36,0.12)",
+      "md": "0 8px 24px rgba(32,42,36,0.08)",
+      "sm": "0 2px 6px rgba(32,42,36,0.05)"
+    },
+    "spacing": {
+      "2xl": "48px",
+      "xl": "32px",
+      "lg": "24px",
+      "md": "16px",
+      "sm": "8px",
+      "xs": "4px"
+    },
+    "typography": {
+      "baseSize": "16px",
+      "bodyFamily": "'Segoe UI', Arial, sans-serif",
+      "bodyWeight": 400,
+      "displaySize": "clamp(32px, 4vw, 56px)",
+      "headingFamily": "Georgia, 'Times New Roman', serif",
+      "headingWeight": 400,
+      "letterSpacing": "-0.025em",
+      "lineHeight": "1.5",
+      "monoFamily": "Consolas, 'Courier New', monospace",
+      "smallSize": "14px"
+    }
+  }
+}
