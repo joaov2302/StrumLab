@@ -1,0 +1,172 @@
+{
+  "author": "Roberto (roberto@zenvoid.org), FreePats",
+  "source": "https://freepats.zenvoid.org/Guitar/acoustic-guitar.html",
+  "repository": "https://github.com/freepats/spanish-classical-guitar",
+  "commit": "6f4eb1b092acc88f5448cea1a0001bd07b971af8",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "retrievedAt": "2026-10-14",
+  "attributionRequired": false,
+  "derivation": "Recorded nylon guitar notes, no pitch shifting; 12 ms string staggering in ascending/descending order, 2 s mono 44.1 kHz PCM16, peak normalized to 0.65, final 100 ms fade. Assembled strums, not recordings of full chord strums.",
+  "chords": {
+    "G": [
+      "G2",
+      "B2",
+      "D3",
+      "G3",
+      "B3",
+      "G4"
+    ],
+    "C": [
+      "C3",
+      "E3",
+      "G3",
+      "C4",
+      "E4"
+    ],
+    "D": [
+      "D3",
+      "A3",
+      "D4",
+      "F#4"
+    ],
+    "Em": [
+      "E2",
+      "B2",
+      "E3",
+      "G3",
+      "B3",
+      "E4"
+    ]
+  },
+  "sources": [
+    {
+      "file": "G2.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/G2.flac",
+      "sha256": "71e69e5eff738f668b4e3e2f53f72de7725fd3b7969339bb44aba8e7c1df78d2"
+    },
+    {
+      "file": "B2.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/B2.flac",
+      "sha256": "fa2881b3cbeec65770890b16f74bcec8c0295952292b52ab3ffe95d130c0e879"
+    },
+    {
+      "file": "D3.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/D3.flac",
+      "sha256": "c4c08268b1147446afcd7c872355aa71d03822c12fb1b56c7f275617ab2b01a1"
+    },
+    {
+      "file": "G3.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/G3.flac",
+      "sha256": "d4f3277f48067a3b7e1818b34d08eeec66d727101c744554632397aeb7dd844d"
+    },
+    {
+      "file": "B3.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/B3.flac",
+      "sha256": "eb1c29a7ab345357ef5f783c581adc6a0e3c8164b712c723c1716b906567306a"
+    },
+    {
+      "file": "G4.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/G4.flac",
+      "sha256": "5e3423ab0440fe8cc337ada529c2bb1696914e4465b336d3635630b4ea7b4916"
+    },
+    {
+      "file": "C3.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/C3.flac",
+      "sha256": "eac0fe1fc03225d81f813667babee072662c101800bc5ad7fb12d9ef3324b986"
+    },
+    {
+      "file": "E3.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/E3.flac",
+      "sha256": "f8cc3192a328f10cdb774ff3bf5efb06d1015e64c5ae141c1c31143bb329c915"
+    },
+    {
+      "file": "C4.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/C4.flac",
+      "sha256": "e8fcd63c262ebef3e84d1f24242918cc578f8b0db54049ad109815b01d1226f0"
+    },
+    {
+      "file": "E4.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/E4.flac",
+      "sha256": "b8882fbba2b6a9d0cbae02867be4273aa8f0fddd00bc6f3d993dff6c77997246"
+    },
+    {
+      "file": "A3.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/A3.flac",
+      "sha256": "08d2e90e80839bdb77342d7dcc8a73e0ec8849607d1a750ce433f9e7f0789e06"
+    },
+    {
+      "file": "D4.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/D4.flac",
+      "sha256": "1fe411c50d107374e59bc6a89e6513d32f4608783c8be8c36f0b81fdab5dd321"
+    },
+    {
+      "file": "F#4.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/F%234.flac",
+      "sha256": "bff470dc100007504ffa6f4e1dc0ced43962b4f37a1904f616e92d09edd636d0"
+    },
+    {
+      "file": "E2.flac",
+      "url": "https://raw.githubusercontent.com/freepats/spanish-classical-guitar/6f4eb1b092acc88f5448cea1a0001bd07b971af8/samples/E2.flac",
+      "sha256": "18ce73f4243991132901b47efe3affa155c1b934d838cf02a29df5c62c8706a8"
+    }
+  ],
+  "assets": [
+    {
+      "file": "G-down.wav",
+      "peak": 0.65,
+      "rms": 0.08375204370069775,
+      "seconds": 2,
+      "sha256": "de25738aee9ec5d4eeef04cd4a5958eeb259e71ab2be7b990ee8890f560a903b"
+    },
+    {
+      "file": "G-up.wav",
+      "peak": 0.65,
+      "rms": 0.09302223283479433,
+      "seconds": 2,
+      "sha256": "a03449b81d42ba4ddbf127b917f10fe43f54e9ef31b54558fd29915f8fc50be8"
+    },
+    {
+      "file": "C-down.wav",
+      "peak": 0.65,
+      "rms": 0.08497557820663802,
+      "seconds": 2,
+      "sha256": "5bca8f49922f303eb3ecfb62d6968232b7262a9e64dc5eced55642498dfb617c"
+    },
+    {
+      "file": "C-up.wav",
+      "peak": 0.65,
+      "rms": 0.069645431555818,
+      "seconds": 2,
+      "sha256": "83ec35426a16fff9b623e86a3381af23a8cc69b7e92e3684c34865bdcc77a393"
+    },
+    {
+      "file": "D-down.wav",
+      "peak": 0.65,
+      "rms": 0.09120574866232294,
+      "seconds": 2,
+      "sha256": "c5d10e3cbb711e529294eaef41b75bfebd55ec9b5bb5190f22878c0e1de49fc9"
+    },
+    {
+      "file": "D-up.wav",
+      "peak": 0.65,
+      "rms": 0.08316487675239294,
+      "seconds": 2,
+      "sha256": "2dd17a9583b0e748b35ed2e2d9a44b0dbeae678bcfc54a6fb030b6a796e19a57"
+    },
+    {
+      "file": "Em-down.wav",
+      "peak": 0.65,
+      "rms": 0.09130710509340696,
+      "seconds": 2,
+      "sha256": "8dda6e445d33ff77b0caf362035c4af42c492b4d4ae3f6d24c0f5a96ca1c7f0c"
+    },
+    {
+      "file": "Em-up.wav",
+      "peak": 0.65,
+      "rms": 0.09966030174027729,
+      "seconds": 2,
+      "sha256": "1e9c5a89454b162d0a11664742a0f2b885a984238e85ea840f274f91639f22d4"
+    }
+  ]
+}

@@ -60,3 +60,14 @@ Evidências em [execucao.md](../../docs/execucao.md), contrato em
 [cancioneiros.md](../../docs/cancioneiros.md). Fases 4–6 não implementadas.
 Próximo gate: Fase 4 — biblioteca de batidas, com origem/licenças de samples de
 violão real verificadas antes de disponibilizar áudio.
+
+## Continuação — 14/10/2026 — Fase 4
+
+Pop/Folk v1, samples FreePats CC0, metrônomo, grade sincronizada, transporte/BPM/
+G-C-D-Em, vínculo versionado e snapshot por item/PDF implementados após autorização
+explícita. Gate local: 76 testes (27 Java, 35 Vitest, 14 Playwright), lint, tipos,
+build, hashes/áudio offline, PostgreSQL real e inspeção de PDFs A4/1–2 colunas.
+Marco MVP manual das Fases 1–4 disponível localmente. Evidências/limites no
+[registro de execução](../../docs/execucao.md) e [contrato de batidas](../../docs/batidas.md).
+CI preparado e não executado remotamente; sem publicação. Fases 5–6 não implementadas.
+Próximo gate: Fase 5 — análise assistida de arquivos autorizados, somente após pedido.

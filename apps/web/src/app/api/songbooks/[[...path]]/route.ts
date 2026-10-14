@@ -3,7 +3,7 @@ import {renderBook,type BookManifest} from '@/lib/pdf/renderer';
 import type {BookRenderClaim} from '@/lib/songbooks';
 export const runtime='nodejs';
 const uuid='[0-9a-fA-F-]{36}';
-const allowed=new RegExp(`^(?:|${uuid}(?:/(?:items(?:/(?:order|${uuid}))?|exports(?:/${uuid}(?:/pdf)?)?))?)$`);
+const allowed=new RegExp(`^(?:|${uuid}(?:/(?:items(?:/(?:order|${uuid}(?:/strumming)?))?|exports(?:/${uuid}(?:/pdf)?)?))?)$`);
 async function proxy(request:NextRequest,context:{params:Promise<{path?:string[]}>}){
   const {path=[]}=await context.params,route=path.join('/');const host=request.headers.get('host')??'';
   if(!allowed.test(route))return NextResponse.json({status:404,detail:'Endpoint indisponível.'},{status:404});

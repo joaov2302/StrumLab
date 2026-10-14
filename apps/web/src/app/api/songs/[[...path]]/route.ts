@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const uuid = '[0-9a-fA-F-]{36}';
-const allowed = new RegExp(`^(?:|transpose|${uuid}(?:/(?:draft|revisions(?:/${uuid}/restore)?))?)$`);
+const allowed = new RegExp(`^(?:|transpose|${uuid}(?:/(?:strumming|draft|revisions(?:/${uuid}/restore)?))?)$`);
 async function proxy(request: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   const { path = [] } = await context.params;
   const route = path.join('/');

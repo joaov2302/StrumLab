@@ -242,3 +242,69 @@ em [pdf-spike.md](pdf-spike.md). Alertas dev de lint da Fase 1 permanecem regist
 Próximo gate: **Fase 4 — biblioteca de batidas**, com samples reais de violão e suas
 fontes/licenças verificadas, além de metrônomo/player/sincronização. Nenhum áudio,
 sample de terceiros, análise musical ou integração foi implementado nesta fase.
+
+## 14/10/2026 — Fase 4 — Biblioteca de batidas
+
+Autorização explícita: “avance para a fase 4”. Entregue somente esse escopo,
+preservando Fases 1–3 e a biblioteca pessoal. Catálogo Pop/Folk do exemplo normativo,
+pesquisa/filtros, prática com grade/ganhos/loop/transporte/BPM/G-C-D-Em, vínculo por
+música e snapshot seletivo de batida no cancioneiro/PDF. Migration Flyway V4, catálogo
+imutável e vínculos com ownership/versão/lock. Renderer PDFKit A4 v2; históricos
+concluídos continuam nos mesmos bytes. Contrato em [batidas.md](batidas.md).
+
+### Licença e áudio real
+
+FreePats Spanish classical guitar, Roberto, CC0-1.0, verificado no site e repositório
+originais. Oito WAVs foram montados de 14 notas gravadas, sem pitch shifting, com
+baixo/cima por ordem de cordas. A interface explicita a derivação; não afirma que
+são gravações de batidas completas. Licença, README, SFZ, commit, URLs, data e hashes
+preservados em public/audio/guitar. Rede só na preparação dos assets; app usa arquivos
+locais. Falha permite tentar novamente ou praticar só com metrônomo provisório.
+
+### Validações executadas
+
+| Verificação | Resultado |
+|---|---|
+| `scripts/test-api.ps1` | 16 testes unitários + 11 de integração aprovados em PostgreSQL real separado |
+| `npm.cmd test` | 35 testes Vitest aprovados; transporte/clock e PDF com batida 1/2 colunas |
+| `npm.cmd run test:e2e` | 14 testes Playwright aprovados no build de produção, sem skips |
+| Lint / typecheck / build | Aprovados |
+| `node scripts/check-guitar.mjs` | 8 hashes/arquivos distintos, buffers decodificados, 8 cenários G/C/D/Em a 90/160 BPM, sem clipping |
+| Aceite 90 BPM | 8 posições, inclusive silenciosas; 6 fontes de violão e 4 cliques no AudioContext real |
+| Sincronização visual | Última execução: offsets absolutos de 13,66–14,93 ms em 7 transições; tolerância do teste 100 ms |
+| Transporte/fallback | Pausa/retomada/BPM pendente/reinício/loop, fechamento do contexto, erro/retry e metrônomo provisório aprovados |
+| Persistência | Aplicar/reabrir, snapshot 90→120 BPM seletivo, exportação histórica com bytes preservados; concorrência com um único vencedor |
+| PDF | 3 páginas em 1 coluna + 6 em 2 colunas, notas longas/16 pt; Unicode, índice, bounds e SHA verificados |
+| Inspeção visual | Poppler PNGs de PDFs e screenshots de catálogo/prática em 360/390/1440 px; sem overflow/erros JavaScript |
+| Segurança | Catálogo Java sem token retorna 403; Origin externo no vínculo retorna 403; guardas anteriores preservadas |
+| Auditoria npm produção | Zero vulnerabilidades |
+
+Total: **76 testes automatizados** (27 Java, 35 Vitest, 14 Playwright), além da QA
+de assets/PDF. As três primeiras jornadas de áudio usam catálogo simulado com eventos
+normativos e WAVs reais; a jornada de vínculo/livro usa API e PostgreSQL reais.
+Fixtures de escrita somente em strumlab_test / 8081 / 3002; nenhum volume apagado.
+Evidências intermediárias em `.cache/phase4`, ignoradas pelo Git.
+Serviços temporários encerrados após QA; API/frontend principais atualizados em
+8080/3000. Health/API/PostgreSQL, catálogo real e consultas à biblioteca conferidos
+na instalação pessoal. Essa instalação não recebeu fixtures desta validação.
+
+Ambiente medido: Windows, Chromium headless do Playwright, AudioContext com saída
+emulada; não é audição humana em fones/caixas nem certificação de latência Bluetooth.
+Offline mix nos ganhos padrão teve pico máximo 0,571 (abaixo de 1,0) nos cenários
+testados. Testes de relógio simulam mudanças rápidas, cancelamento, pausa fracionária,
+stall e reativação do loop na janela de lookahead.
+
+Correções durante QA: fixture de outro dono passou a criar workspace válido antes
+de mudar ownership; seletor de alerta foi limitado ao painel (o Next tem outro alert);
+espera de slot transitório passou a usar rAF para não perder a colcheia entre polls.
+Conversão de texto pela pipeline PowerShell foi corrigida, com releitura UTF-8,
+asserts de legenda/setas e inspeção Poppler. Esses problemas foram resolvidos antes
+da validação final; nenhuma falha de teste foi tratada como aprovação.
+
+### Limites e próximo gate
+
+Marco MVP manual Fases 1–4 disponível localmente. Autenticação pública, hospedagem,
+Safari/Firefox, audição humana/dispositivos físicos, PDF/UA e auditoria integral de
+leitor de tela não validados. Não há análise de áudio, playlist, gravação ou mudança
+automática de acordes. CI atualizado mas não executado remotamente; sem push/deploy.
+Próxima fase: **Fase 5 — análise assistida de áudio autorizado**, mediante solicitação.

@@ -133,3 +133,24 @@ details label { margin-bottom:16px; }
 .page-heading>div { min-width:0; }
 .pdf-index button { max-width:100%; overflow-wrap:anywhere; text-align:left; }
 @media(max-width:759px){.layout-fields { grid-template-columns:repeat(2,minmax(0,1fr)); }.book-config,.book-item-list>li { padding:16px; }.book-item-title { gap:8px; }.pdf-index { padding-left:16px; }}
+
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.rhythm-filters { display:grid; grid-template-columns:2fr repeat(4,1fr); gap:16px; margin-bottom:32px; }
+.pattern-list { list-style:none; padding:0; max-width:700px; }
+.pattern-list>li,.practice-panel { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:32px; margin-bottom:24px; }
+.pattern-symbols { font:32px/1.4 Consolas,monospace; color:var(--primary); letter-spacing:.06em; }
+.practice-meta { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; }
+.rhythm-grid { list-style:none; padding:0; display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:8px; margin:24px 0 16px; }
+.rhythm-grid li { display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; border:1px solid var(--border); border-radius:8px; background:var(--surface-muted); }
+.rhythm-grid li.current { outline:3px solid var(--primary); outline-offset:2px; background:var(--secondary); }
+.rhythm-grid li.current .rhythm-count { text-decoration:underline; font-weight:700; }
+.rhythm-grid strong { font:36px/1.2 Consolas,monospace; color:var(--primary); }
+.rhythm-grid .silent strong { color:var(--muted); }
+.rhythm-grid small { font-size:12px; }
+.rhythm-count { font:20px/1.4 Consolas,monospace; }
+.rhythm-position { min-height:48px; font-size:14px; }
+.practice-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; margin:24px 0; }
+.practice-controls input[type=range] { padding:0; }
+.practice-panel details { border-top:1px solid var(--border); margin-top:24px; }
+.book-strumming { border-top:1px solid var(--border); margin-top:16px; padding-top:16px; }
+@media(max-width:759px){.rhythm-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }.rhythm-filters>label:first-child { grid-column:span 2; }.practice-panel,.pattern-list>li { padding:16px; }.rhythm-grid { gap:4px; }.rhythm-grid li { padding:8px 0; gap:4px; }.rhythm-grid strong { font-size:26px; }.rhythm-grid small { font-size:9px; }.practice-controls { gap:16px; }}

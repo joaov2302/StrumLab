@@ -109,3 +109,30 @@ prompt 03. Não houve contratação/deploy ou aprovação de recursos de fases p
 D-022–D-024: escolhas técnicas implementadas no protótipo da fase autorizada.
 A4 retrato segue o prompt; categorias/paisagem e snapshots de batida de D-015 ainda
 não foram implementados. Token local segue D-020; não aprova autenticação pública.
+
+## Continuação — 14/10/2026 — Fase 4
+
+Escopo autorizado explicitamente pelo usuário: “avance para a fase 4”. Escolhas
+incrementais de implementação sob responsabilidade do agente, dentro do prompt 04.
+As propostas gerais anteriores permanecem registradas; não se atribui ao usuário
+uma confirmação individual de todos os ADRs nem autorização de publicação/fases futuras.
+
+- **D-025:** Spanish classical guitar / FreePats, Roberto, CC0-1.0, licença verificada
+  nas fontes primárias. Commit, arquivos/licença, hashes e data preservados. G/C/D/Em
+  down/up montados de 14 notas gravadas, sem pitch shifting; interface explicita que
+  não são gravações de batidas completas. Alternativa: samples de acordes completos
+  próprios. Timbre didático com uma camada de dinâmica, não sampler profissional.
+- **D-026:** Web Audio como relógio mestre; lookahead 80 ms/wake-up 20 ms, BPM no
+  próximo compasso, pause/resume fracionário e rAF compensado por timestamp de saída.
+  Alternativa: timer visual/sonoro compartilhado, descartada pela precisão musical.
+  Aba oculta/atraso excessivo pausa. Falha de samples oferece somente metrônomo
+  provisório identificado; não substitui instrumento por oscilador simples.
+- **D-027:** Vínculo ativo com versão própria e snapshot opcional por item do livro,
+  conforme docs/15. Captura ao adicionar e ao atualizar explicitamente a batida de
+  um item; nota/revisão não recapturam. Manifesto inclui eventos/versão/BPM/notas/
+  exibição. PDFKit A4 v2 imprime grade/legenda, preservando bytes dos PDFs antigos.
+
+D-025–D-027: escolhas técnicas implementadas no protótipo local da fase autorizada.
+Vínculo e snapshot de batida propostos em D-015 estão implementados neste escopo;
+não significa confirmação de recursos de colaboração, hosting ou análise automática.
+Contrato detalhado e limites em `docs/batidas.md` do repositório.

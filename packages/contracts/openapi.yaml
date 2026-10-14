@@ -1543,6 +1543,119 @@ paths:
               schema:
                 type: string
                 format: binary
+  /api/v1/strumming-patterns:
+    get:
+      operationId: listStrummingPatterns
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StrummingPattern'
+        '403':
+          description: Acesso local negado
+        '404':
+          description: Recurso não encontrado
+        '409':
+          description: Conflito de versão; recarregar antes de substituir
+        '422':
+          description: Entrada inválida
+      security:
+        - LocalProxyToken: []
+  /api/v1/songs/{id}/strumming:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getSongStrumming
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrummingBinding'
+        '403':
+          description: Acesso local negado
+        '404':
+          description: Recurso não encontrado
+        '409':
+          description: Conflito de versão; recarregar antes de substituir
+        '422':
+          description: Entrada inválida
+      security:
+        - LocalProxyToken: []
+    put:
+      operationId: saveSongStrumming
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrummingEdit'
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrummingBinding'
+        '403':
+          description: Acesso local negado
+        '404':
+          description: Recurso não encontrado
+        '409':
+          description: Conflito de versão; recarregar antes de substituir
+        '422':
+          description: Entrada inválida
+      security:
+        - LocalProxyToken: []
+  /api/v1/songbooks/{id}/items/{itemId}/strumming:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      operationId: updateBookStrumming
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookStrummingEdit'
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '403':
+          description: Acesso local negado
+        '404':
+          description: Recurso não encontrado
+        '409':
+          description: Conflito de versão; recarregar antes de substituir
+        '422':
+          description: Entrada inválida
+      security:
+        - LocalProxyToken: []
 components:
   schemas:
     Health:
@@ -1959,6 +2072,10 @@ components:
           nullable: true
         songArchived:
           type: boolean
+        strummingSnapshot:
+          allOf:
+            - $ref: '#/components/schemas/StrummingSnapshot'
+          nullable: true
       additionalProperties: false
     BookPage:
       type: object
@@ -2087,6 +2204,10 @@ components:
           $ref: '#/components/schemas/SongContent'
         notes:
           type: string
+        strummingSnapshot:
+          allOf:
+            - $ref: '#/components/schemas/StrummingSnapshot'
+          nullable: true
       additionalProperties: false
     BookManifest:
       type: object
@@ -2143,6 +2264,142 @@ components:
           type: string
           format: uuid
           nullable: true
+      additionalProperties: false
+    StrummingEvent:
+      type: object
+      required:
+        - slot
+        - direction
+        - play
+        - accent
+        - velocity
+      properties:
+        slot:
+          type: integer
+          minimum: 0
+          maximum: 7
+        direction:
+          type: string
+          enum:
+            - down
+            - up
+        play:
+          type: boolean
+        accent:
+          type: boolean
+        velocity:
+          type: number
+          minimum: 0
+          maximum: 1
+      additionalProperties: false
+    StrummingPattern:
+      type: object
+      required:
+        - id
+        - name
+        - version
+        - difficulty
+        - style
+        - timeSignature
+        - defaultBpm
+        - subdivisionsPerBar
+        - events
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        version:
+          type: integer
+        difficulty:
+          type: string
+          enum:
+            - beginner
+        style:
+          type: string
+        timeSignature:
+          type: string
+        defaultBpm:
+          type: integer
+        subdivisionsPerBar:
+          type: integer
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/StrummingEvent'
+      additionalProperties: false
+    StrummingSnapshot:
+      type: object
+      required:
+        - pattern
+        - bpm
+        - notes
+        - showInPdf
+      properties:
+        pattern:
+          $ref: '#/components/schemas/StrummingPattern'
+        bpm:
+          type: integer
+          minimum: 45
+          maximum: 160
+        notes:
+          type: string
+          maxLength: 1000
+        showInPdf:
+          type: boolean
+      additionalProperties: false
+    StrummingBinding:
+      type: object
+      required:
+        - version
+        - snapshot
+      properties:
+        version:
+          type: integer
+        snapshot:
+          allOf:
+            - $ref: '#/components/schemas/StrummingSnapshot'
+          nullable: true
+      additionalProperties: false
+    StrummingEdit:
+      type: object
+      required:
+        - version
+        - patternId
+        - patternVersion
+        - bpm
+        - notes
+        - showInPdf
+      properties:
+        version:
+          type: integer
+        patternId:
+          type: string
+          nullable: true
+        patternVersion:
+          type: integer
+        bpm:
+          type: integer
+          minimum: 45
+          maximum: 160
+        notes:
+          type: string
+          maxLength: 1000
+        showInPdf:
+          type: boolean
+      additionalProperties: false
+    BookStrummingEdit:
+      type: object
+      required:
+        - version
+        - refresh
+      properties:
+        version:
+          type: integer
+        refresh:
+          type: boolean
+        showInPdf:
+          type: boolean
       additionalProperties: false
   securitySchemes:
     LocalProxyToken:

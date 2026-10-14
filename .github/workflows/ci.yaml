@@ -1,4 +1,4 @@
-name: Foundation
+name: Local MVP validation
 on: [push, pull_request]
 permissions:
   contents: read
@@ -48,4 +48,5 @@ jobs:
           exit 1
       - run: npx playwright install --with-deps chromium
         working-directory: apps/web
+      - run: node scripts/check-guitar.mjs
       - run: npm run test:e2e

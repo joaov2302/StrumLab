@@ -289,6 +289,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/strumming-patterns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listStrummingPatterns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songs/{id}/strumming": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get: operations["getSongStrumming"];
+        put: operations["saveSongStrumming"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songbooks/{id}/items/{itemId}/strumming": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateBookStrumming"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -433,6 +486,7 @@ export interface components {
             /** Format: uuid */
             latestRevisionId: string | null;
             songArchived: boolean;
+            strummingSnapshot?: components["schemas"]["StrummingSnapshot"] | null;
         };
         BookPage: {
             items: components["schemas"]["BookSummary"][];
@@ -478,6 +532,7 @@ export interface components {
             revisionNo: number;
             content: components["schemas"]["SongContent"];
             notes: string;
+            strummingSnapshot?: components["schemas"]["StrummingSnapshot"] | null;
         };
         BookManifest: {
             /** @enum {integer} */
@@ -498,6 +553,49 @@ export interface components {
             manifest: components["schemas"]["BookManifest"];
             /** Format: uuid */
             leaseToken: string | null;
+        };
+        StrummingEvent: {
+            slot: number;
+            /** @enum {string} */
+            direction: "down" | "up";
+            play: boolean;
+            accent: boolean;
+            velocity: number;
+        };
+        StrummingPattern: {
+            id: string;
+            name: string;
+            version: number;
+            /** @enum {string} */
+            difficulty: "beginner";
+            style: string;
+            timeSignature: string;
+            defaultBpm: number;
+            subdivisionsPerBar: number;
+            events: components["schemas"]["StrummingEvent"][];
+        };
+        StrummingSnapshot: {
+            pattern: components["schemas"]["StrummingPattern"];
+            bpm: number;
+            notes: string;
+            showInPdf: boolean;
+        };
+        StrummingBinding: {
+            version: number;
+            snapshot: components["schemas"]["StrummingSnapshot"] | null;
+        };
+        StrummingEdit: {
+            version: number;
+            patternId: string | null;
+            patternVersion: number;
+            bpm: number;
+            notes: string;
+            showInPdf: boolean;
+        };
+        BookStrummingEdit: {
+            version: number;
+            refresh: boolean;
+            showInPdf?: boolean;
         };
     };
     responses: never;
@@ -2457,6 +2555,213 @@ export interface operations {
                 content: {
                     "application/pdf": string;
                 };
+            };
+        };
+    };
+    listStrummingPatterns: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrummingPattern"][];
+                };
+            };
+            /** @description Acesso local negado */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurso não encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Conflito de versão; recarregar antes de substituir */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Entrada inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getSongStrumming: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrummingBinding"];
+                };
+            };
+            /** @description Acesso local negado */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurso não encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Conflito de versão; recarregar antes de substituir */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Entrada inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    saveSongStrumming: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StrummingEdit"];
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrummingBinding"];
+                };
+            };
+            /** @description Acesso local negado */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurso não encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Conflito de versão; recarregar antes de substituir */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Entrada inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateBookStrumming: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookStrummingEdit"];
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Acesso local negado */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Recurso não encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Conflito de versão; recarregar antes de substituir */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Entrada inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

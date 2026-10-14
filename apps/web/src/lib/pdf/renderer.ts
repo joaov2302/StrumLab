@@ -2,11 +2,12 @@ import PDFDocument from 'pdfkit';
 import * as fontkit from 'fontkit';
 import path from 'node:path';
 import type { SongContent } from '../songs';
+import {counts,symbol,type StrummingSnapshot} from '../strumming';
 
-export const RENDERER_VERSION='pdfkit-a4-v1';
+export const RENDERER_VERSION='pdfkit-a4-v2';
 export type BookLayout={font:'sans'|'serif';fontSize:number;marginMm:number;lineSpacing:number;columns:1|2};
 export type BookCover={enabled:boolean;imageData:string;imageRights:'unspecified'|'own'|'permission'};
-export type ManifestItem={itemId:string;songId:string;revisionId:string;revisionNo:number;content:SongContent;notes:string};
+export type ManifestItem={itemId:string;songId:string;revisionId:string;revisionNo:number;content:SongContent;notes:string;strummingSnapshot?:StrummingSnapshot|null};
 export type BookManifest={schemaVersion:1;rendererVersion:string;songbookId:string;bookVersion:number;title:string;subtitle:string;organizer:string;cover:BookCover;layout:BookLayout;items:ManifestItem[]};
 type Font='sans'|'serif'|'symbols'|'math'|'emoji';
 export type DrawText={kind:'text';x:number;y:number;text:string;size:number;font:Font;color:string};
@@ -96,6 +97,16 @@ export function planBook(manifest:BookManifest):BookPlan {
     const advance=()=>{if(column+1<l.columns){column++;y=margin;for(const line of wrap(`${item.content.title} (continuação)`,columnWidth,10,font,measure)){addText(page!,line,margin+column*(columnWidth+gap),y,10,font);y+=16;}y+=8;}else newPage(true);};
     const ensure=(height:number)=>{if(y+height>bottom)advance();if(y+height>bottom)throw new Error('Uma linha não cabe na página com o layout escolhido.');};
     newPage();starts.push({itemId:item.itemId,title:item.content.title,page:songs.length,revisionNo:item.revisionNo});
+    if(item.strummingSnapshot?.showInPdf){
+      const s=item.strummingSnapshot,p=s.pattern;
+      const heading=wrap(`${p.name} · v${p.version} · ${p.timeSignature} · ${s.bpm} BPM`,columnWidth,9,'sans',measure);
+      ensure(heading.length*15+44);
+      const left=margin+column*(columnWidth+gap);
+      for(const row of heading){addText(page!,row,left,y,9,'sans');y+=15;}
+      for(const event of p.events){const center=left+(event.slot+.5)*columnWidth/8;addText(page!,counts[event.slot],center-measure(counts[event.slot],9,'sans')/2,y,9,'sans');const arrow=symbol(event);addText(page!,arrow,center-measure(arrow,14,'sans')/2,y+15,14,'sans');}y+=44;
+      const legend=['↓ baixo · ↑ cima · · movimento sem ataque','Acento no tempo 1. Mantenha a mão alternando.',...(s.notes?[s.notes]:[])];
+      for(const text of legend)for(const row of wrap(text,columnWidth,9,'sans',measure)){ensure(15);addText(page!,row,margin+column*(columnWidth+gap),y,9,'sans');y+=15;}y+=12;
+    }
     for(const section of item.content.sections){
       const labelRows=wrap(section.label||'Seção',columnWidth,11,font,measure);
       const lineHeight=(row:Atom[])=>row.some(atom=>atom.chord)?rowHeight:size*1.7*l.lineSpacing;

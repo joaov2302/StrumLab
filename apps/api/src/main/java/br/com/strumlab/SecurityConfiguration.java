@@ -22,6 +22,7 @@ public class SecurityConfiguration {
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/health").permitAll()
                 .requestMatchers("/api/v1/songs", "/api/v1/songs/**").permitAll()
                 .requestMatchers("/api/v1/songbooks", "/api/v1/songbooks/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/strumming-patterns").permitAll()
                 .anyRequest().denyAll())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())

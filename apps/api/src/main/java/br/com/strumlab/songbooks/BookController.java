@@ -20,6 +20,8 @@ public class BookController {
     @PutMapping("/{id}/items/order")public Detail order(@PathVariable UUID id,@RequestBody Order order){return books.reorder(id,order.version(),order.itemIds());}
     public record ItemEdit(Long version,UUID revisionId,String notes){}
     @PatchMapping("/{id}/items/{itemId}")public Detail item(@PathVariable UUID id,@PathVariable UUID itemId,@RequestBody ItemEdit edit){return books.updateItem(id,edit.version(),itemId,edit.revisionId(),edit.notes());}
+    public record StrummingEdit(Long version,boolean refresh,Boolean showInPdf){}
+    @PatchMapping("/{id}/items/{itemId}/strumming")public Detail strumming(@PathVariable UUID id,@PathVariable UUID itemId,@RequestBody StrummingEdit edit){return books.updateStrumming(id,edit.version(),itemId,edit.refresh(),edit.showInPdf());}
     public record Version(Long version){}
     @DeleteMapping("/{id}/items/{itemId}")public Detail remove(@PathVariable UUID id,@PathVariable UUID itemId,@RequestBody Version version){return books.remove(id,version.version(),itemId);}
     @PostMapping("/{id}/exports")public RenderClaim begin(@PathVariable UUID id,@RequestBody Version version){return books.begin(id,version.version());}

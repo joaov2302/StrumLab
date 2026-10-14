@@ -1,9 +1,10 @@
 # StrumLab
 
 Da música ao seu cancioneiro. Aplicação local em Next.js/TypeScript, Java 21/Spring Boot
-e PostgreSQL. **Fases 1–3 implementadas:** fundação, biblioteca/editor, rascunhos,
-revisões imutáveis, transposição, capo, ChordPro básico e cancioneiros com prévia/PDF.
-Áudio e integrações ficam nas fases correspondentes.
+e PostgreSQL. **Fases 1–4 implementadas:** fundação, biblioteca/editor, rascunhos,
+revisões imutáveis, transposição, capo, ChordPro básico, cancioneiros com prévia/PDF
+e prática Pop/Folk com samples licenciados, metrônomo e vínculo à cifra/PDF.
+Análise de áudio e integrações ficam nas fases correspondentes.
 
 ## Executar localmente
 
@@ -104,3 +105,5 @@ os dados permanecem no volume. API e frontend encerram com Ctrl+C.
 - [Prompt da Fase 3](StrumLab-documentacao-v1.1/prompts/03-fase-3-cancioneiros.md)
 - [Contrato dos cancioneiros](docs/cancioneiros.md)
 - [Comparação dos motores de PDF](docs/pdf-spike.md)
+- [Prompt da Fase 4](StrumLab-documentacao-v1.1/prompts/04-fase-4-batidas.md)
+- [Contrato da prática e licença dos samples](docs/batidas.md)
