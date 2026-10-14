@@ -19,18 +19,844 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Health'
+  /api/v1/songs:
+    get:
+      operationId: listSongs
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - active
+              - draft
+              - reviewed
+              - archived
+              - all
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongPage'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+    post:
+      operationId: createSong
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongContent'
+      responses:
+        '201':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songs/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getSong
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+    patch:
+      operationId: archiveSong
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - archived
+                - draftVersion
+              properties:
+                archived:
+                  type: boolean
+                draftVersion:
+                  type: integer
+              additionalProperties: false
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songs/{id}/draft:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      operationId: saveDraft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongEdit'
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songs/{id}/revisions:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: saveRevision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongEdit'
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songs/{id}/revisions/{revisionId}/restore:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: revisionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: restoreRevision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - baseRevisionId
+                - draftVersion
+              properties:
+                baseRevisionId:
+                  type: string
+                  format: uuid
+                  nullable: true
+                draftVersion:
+                  type: integer
+              additionalProperties: false
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
+  /api/v1/songs/transpose:
+    post:
+      operationId: transposeContent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+                - semitones
+                - spelling
+              properties:
+                content:
+                  $ref: '#/components/schemas/SongContent'
+                semitones:
+                  type: integer
+                  minimum: -12
+                  maximum: 12
+                spelling:
+                  type: string
+                  enum:
+                    - sharps
+                    - flats
+              additionalProperties: false
+      responses:
+        '200':
+          description: Resultado da operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongContent'
+        '400':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operação não concluída
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+      security:
+        - LocalProxyToken: []
 components:
   schemas:
     Health:
       type: object
-      required: [status, database, mode]
+      required:
+        - status
+        - database
+        - mode
       properties:
         status:
           type: string
-          enum: [up, down]
+          enum:
+            - up
+            - down
         database:
           type: string
-          enum: [up, down]
+          enum:
+            - up
+            - down
         mode:
           type: string
-          enum: [local]
+          enum:
+            - local
+    SongContent:
+      type: object
+      required:
+        - schemaVersion
+        - title
+        - artist
+        - key
+        - bpm
+        - meter
+        - capo
+        - sourceType
+        - sourceReference
+        - rightsBasis
+        - sections
+      properties:
+        schemaVersion:
+          type: integer
+          enum:
+            - 1
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        artist:
+          type: string
+          maxLength: 200
+        key:
+          type: string
+        bpm:
+          type: integer
+          nullable: true
+          minimum: 20
+          maximum: 400
+        meter:
+          type: string
+        capo:
+          type: integer
+          minimum: 0
+          maximum: 12
+        sourceType:
+          type: string
+          enum:
+            - manual
+            - chordpro
+        sourceReference:
+          type: string
+          maxLength: 1000
+        rightsBasis:
+          type: string
+          enum:
+            - unspecified
+            - own
+            - permission
+            - public_domain
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongSection'
+      additionalProperties: false
+    SongSection:
+      type: object
+      required:
+        - id
+        - type
+        - label
+        - lines
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - intro
+            - verse
+            - chorus
+            - bridge
+            - outro
+            - other
+        label:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongLine'
+      additionalProperties: false
+    SongLine:
+      type: object
+      required:
+        - id
+        - tokens
+      properties:
+        id:
+          type: string
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongToken'
+      additionalProperties: false
+    SongToken:
+      oneOf:
+        - type: object
+          required:
+            - type
+            - symbol
+          properties:
+            type:
+              type: string
+              enum:
+                - chord
+            symbol:
+              type: string
+            value:
+              type: string
+              nullable: true
+          additionalProperties: false
+        - type: object
+          required:
+            - type
+            - value
+          properties:
+            type:
+              type: string
+              enum:
+                - text
+            value:
+              type: string
+            symbol:
+              type: string
+              nullable: true
+          additionalProperties: false
+    SongSummary:
+      type: object
+      required:
+        - id
+        - title
+        - artist
+        - status
+        - currentRevisionId
+        - draftVersion
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        artist:
+          type: string
+        status:
+          type: string
+          enum:
+            - draft
+            - reviewed
+            - archived
+        currentRevisionId:
+          type: string
+          format: uuid
+          nullable: true
+        draftVersion:
+          type: integer
+          format: int64
+        updatedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    SongRevision:
+      type: object
+      required:
+        - id
+        - revisionNo
+        - content
+        - source
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        revisionNo:
+          type: integer
+        content:
+          $ref: '#/components/schemas/SongContent'
+        source:
+          type: string
+          enum:
+            - manual
+            - chordpro
+            - restored
+        createdAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    SongDetail:
+      type: object
+      required:
+        - song
+        - draft
+        - baseRevisionId
+        - revisions
+      properties:
+        song:
+          $ref: '#/components/schemas/SongSummary'
+        draft:
+          $ref: '#/components/schemas/SongContent'
+        baseRevisionId:
+          type: string
+          format: uuid
+          nullable: true
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongRevision'
+      additionalProperties: false
+    SongPage:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongSummary'
+        total:
+          type: integer
+      additionalProperties: false
+    SongEdit:
+      type: object
+      required:
+        - content
+        - baseRevisionId
+        - draftVersion
+      properties:
+        content:
+          $ref: '#/components/schemas/SongContent'
+        baseRevisionId:
+          type: string
+          format: uuid
+          nullable: true
+        draftVersion:
+          type: integer
+          format: int64
+      additionalProperties: false
+    SongProblem:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+      properties:
+        status:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+  securitySchemes:
+    LocalProxyToken:
+      type: apiKey
+      in: header
+      name: X-StrumLab-Local-Token
+      description: Token privado entre Next.js e API. Não enviar ao navegador. Não é autenticação de usuário.

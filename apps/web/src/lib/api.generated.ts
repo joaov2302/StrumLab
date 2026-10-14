@@ -20,6 +20,111 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/songs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listSongs"];
+        put?: never;
+        post: operations["createSong"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get: operations["getSong"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["archiveSong"];
+        trace?: never;
+    };
+    "/api/v1/songs/{id}/draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["saveDraft"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songs/{id}/revisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["saveRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songs/{id}/revisions/{revisionId}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                revisionId: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["restoreRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/songs/transpose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["transposeContent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -31,6 +136,91 @@ export interface components {
             database: "up" | "down";
             /** @enum {string} */
             mode: "local";
+        };
+        SongContent: {
+            /** @enum {integer} */
+            schemaVersion: 1;
+            title: string;
+            artist: string;
+            key: string;
+            bpm: number | null;
+            meter: string;
+            capo: number;
+            /** @enum {string} */
+            sourceType: "manual" | "chordpro";
+            sourceReference: string;
+            /** @enum {string} */
+            rightsBasis: "unspecified" | "own" | "permission" | "public_domain";
+            sections: components["schemas"]["SongSection"][];
+        };
+        SongSection: {
+            id: string;
+            /** @enum {string} */
+            type: "intro" | "verse" | "chorus" | "bridge" | "outro" | "other";
+            label: string;
+            lines: components["schemas"]["SongLine"][];
+        };
+        SongLine: {
+            id: string;
+            tokens: components["schemas"]["SongToken"][];
+        };
+        SongToken: {
+            /** @enum {string} */
+            type: "chord";
+            symbol: string;
+            value?: string | null;
+        } | {
+            /** @enum {string} */
+            type: "text";
+            value: string;
+            symbol?: string | null;
+        };
+        SongSummary: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            artist: string;
+            /** @enum {string} */
+            status: "draft" | "reviewed" | "archived";
+            /** Format: uuid */
+            currentRevisionId: string | null;
+            /** Format: int64 */
+            draftVersion: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        SongRevision: {
+            /** Format: uuid */
+            id: string;
+            revisionNo: number;
+            content: components["schemas"]["SongContent"];
+            /** @enum {string} */
+            source: "manual" | "chordpro" | "restored";
+            /** Format: date-time */
+            createdAt: string;
+        };
+        SongDetail: {
+            song: components["schemas"]["SongSummary"];
+            draft: components["schemas"]["SongContent"];
+            /** Format: uuid */
+            baseRevisionId: string | null;
+            revisions: components["schemas"]["SongRevision"][];
+        };
+        SongPage: {
+            items: components["schemas"]["SongSummary"][];
+            total: number;
+        };
+        SongEdit: {
+            content: components["schemas"]["SongContent"];
+            /** Format: uuid */
+            baseRevisionId: string | null;
+            /** Format: int64 */
+            draftVersion: number;
+        };
+        SongProblem: {
+            status: number;
+            title: string;
+            detail: string;
         };
     };
     responses: never;
@@ -66,6 +256,721 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Health"];
+                };
+            };
+        };
+    };
+    listSongs: {
+        parameters: {
+            query?: {
+                q?: string;
+                status?: "active" | "draft" | "reviewed" | "archived" | "all";
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongPage"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    createSong: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SongContent"];
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    getSong: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    archiveSong: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    archived: boolean;
+                    draftVersion: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    saveDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SongEdit"];
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    saveRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SongEdit"];
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    restoreRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                revisionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    baseRevisionId: string | null;
+                    draftVersion: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongDetail"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    transposeContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    content: components["schemas"]["SongContent"];
+                    semitones: number;
+                    /** @enum {string} */
+                    spelling: "sharps" | "flats";
+                };
+            };
+        };
+        responses: {
+            /** @description Resultado da operação */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongContent"];
+                };
+            };
+            /** @description Operação não concluída */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operação não concluída */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
                 };
             };
         };

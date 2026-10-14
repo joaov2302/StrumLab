@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 public class SecurityConfiguration {
@@ -13,9 +15,12 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(auth -> auth
+    SecurityFilterChain securityFilterChain(HttpSecurity http, @Value("${LOCAL_API_TOKEN}") String token) throws Exception {
+        return http.addFilterBefore(new LocalAccessFilter(token), AuthorizationFilter.class)
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/songs", "/api/v1/songs/**"))
+                .authorizeHttpRequests(auth -> auth
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/health").permitAll()
+                .requestMatchers("/api/v1/songs", "/api/v1/songs/**").permitAll()
                 .anyRequest().denyAll())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())

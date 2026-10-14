@@ -60,3 +60,27 @@ Registros anteriores preservados como histórico. Escolhas de versões e ferrame
 de teste são detalhes técnicos da Fase 1. Papel & Cordas é referência provisória de
 implementação; D-014 permanece proposta visual. Esta confirmação não aprova deploy,
 worker, integrações, fontes de conteúdo, samples ou implementação das fases seguintes.
+
+## Continuação da implementação — 14/10/2026 — Fase 2
+
+Responsável pela autorização de escopo: usuário, ao pedir continuidade após a entrega
+da Fase 1 e indicação da biblioteca/editor como próximo gate. Responsável pelas escolhas
+incrementais de implementação: agente de engenharia, dentro do prompt 02 autorizado.
+
+Não houve confirmação individual dos ADRs gerais D-007/D-008/D-015 nesta mensagem;
+seu estado abrangente de proposta foi preservado. O subset ChordPro, os tokens,
+a imutabilidade e os metadados históricos foram implementados conforme os requisitos
+e invariantes do prompt 02/documentos 04/05/15. Não se afirma compatibilidade completa
+com ChordPro, nem aprovação de snapshots de batida/livros ainda não implementados.
+
+| ID | Escolha técnica aplicada ao protótipo | Contexto / alternativas / consequências |
+|---|---|---|
+| D-018 | Rascunho com contador de versão e lock por música; revisões append-only | Alternativa: versão só da revisão. Contador também detecta autosave concorrente; trigger impede UPDATE/DELETE das revisões |
+| D-019 | Entrada textual de acordes por seção convertida em tokens | Alternativa: editor WYSIWYG. Mantém implementação incremental e âncoras sem espaços frágeis; leitura renderiza acordes sobre o texto |
+| D-020 | Token privado entre proxy Next.js e Java; Origin/Host limitado ao loopback | Alternativa: API de escrita anônima local. Evita requisições de outros sites; não substitui autenticação multiusuário |
+| D-021 | Banco strumlab_test separado e serviços temporários para QA | Alternativa: inserir fixtures no banco pessoal. Preserva biblioteca do usuário; nenhum volume existente é apagado |
+
+Status D-018–D-021: **escolhas técnicas implementadas na fase local autorizada**;
+reavaliar antes de publicação. Limites/gramática/subset no contrato `docs/editor.md`
+do repositório. Não houve aprovação de hosting, PDF definitivo, licenças de samples,
+integrações, compartilhamento ou fases futuras.

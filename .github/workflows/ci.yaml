@@ -21,6 +21,7 @@ jobs:
       POSTGRES_USER: strumlab_test
       POSTGRES_PASSWORD: ci-disposable-only
       LIVE_API: '1'
+      LOCAL_API_TOKEN: ci-local-api-token-disposable-000001
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

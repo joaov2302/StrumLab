@@ -20,7 +20,7 @@ class FoundationIT {
     }
     @Test void migratedPostgresAndHealth() throws Exception {
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM flyway_schema_history WHERE success = true AND version = '1'", Integer.class)).isEqualTo(1);
-        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM workspace", Integer.class)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM workspace WHERE id='00000000-0000-4000-8000-000000000001'", Integer.class)).isEqualTo(1);
         var response = get("/api/v1/health");
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(response.body()).contains("\"status\":\"up\"", "\"database\":\"up\"", "\"mode\":\"local\"");

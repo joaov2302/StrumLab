@@ -1,5 +1,8 @@
+param([string]$DatabaseUrl, [int]$Port = 8080)
 . "$PSScriptRoot/load-env.ps1"
 $env:DEBUG = 'false'
+if ($DatabaseUrl) { $env:DATABASE_URL = $DatabaseUrl }
+$env:SERVER_PORT = [string]$Port
 Push-Location (Join-Path $projectRoot 'apps/api')
 try {
     $env:MAVEN_USER_HOME = Join-Path $projectRoot '.cache/maven-user'

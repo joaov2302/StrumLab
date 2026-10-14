@@ -1,0 +1,13 @@
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+import { spawn } from 'node:child_process';
+const envPath = fileURLToPath(new URL('../.env', import.meta.url));
+if (existsSync(envPath)) process.loadEnvFile(envPath);
+const require = createRequire(import.meta.url);
+const environment = { ...process.env };
+if (environment.DEBUG === 'release') delete environment.DEBUG;
+const mode = process.argv[2] ?? 'dev';
+const child = spawn(process.execPath, [require.resolve('next/dist/bin/next'), mode, ...(mode === 'build' ? [] : ['--hostname', '127.0.0.1']), ...process.argv.slice(3)], { cwd: fileURLToPath(new URL('../apps/web', import.meta.url)), stdio: 'inherit', env: environment });
+child.on('exit', code => { process.exitCode = code ?? 1; });
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));

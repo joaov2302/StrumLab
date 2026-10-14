@@ -39,3 +39,13 @@ verificados. Evidências, comandos e limitações em [docs/execucao.md](../../do
 e [README operacional](../../README.md). CI preparado, ainda não executado remotamente.
 Fases 2–6 não implementadas. Próximo gate: biblioteca/editor, conforme prompt 02,
 com revisão das decisões específicas e autorização dessa fase.
+
+## Continuação — 14/10/2026 — Fase 2
+
+Biblioteca/editor implementados após o pedido do usuário para continuar. CRUD por
+criação/edição/listagem/arquivo, tokens semânticos, revisões imutáveis, rascunho,
+conflito, transposição/capo e ChordPro básico validados em PostgreSQL real e navegador.
+Gate local aprovado: 49 testes, lint, tipos e build. Evidências e limitações no
+[registro de execução](../../docs/execucao.md), contrato em [editor.md](../../docs/editor.md).
+CI preparado, não executado remotamente. Fases 3–6 não implementadas.
+Próximo gate: prompt 03, Cancioneiros, incluindo spike da renderização PDF.
