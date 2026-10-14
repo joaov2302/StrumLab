@@ -1,0 +1,50 @@
+name: Foundation
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_DB: strumlab_test
+          POSTGRES_USER: strumlab_test
+          POSTGRES_PASSWORD: ci-disposable-only
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U strumlab_test -d strumlab_test"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/strumlab_test
+      POSTGRES_USER: strumlab_test
+      POSTGRES_PASSWORD: ci-disposable-only
+      LIVE_API: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: npm ci
+      - run: npm run lint && npm run typecheck && npm test && npm run build
+      - run: npm audit --omit=dev
+      - run: bash apps/api/mvnw -B -ntp -f apps/api/pom.xml verify
+      - name: Start API
+        run: |
+          java -jar apps/api/target/api-0.0.1-SNAPSHOT.jar > /tmp/strumlab-api.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8080/api/v1/health; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/strumlab-api.log
+          exit 1
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: npm run test:e2e

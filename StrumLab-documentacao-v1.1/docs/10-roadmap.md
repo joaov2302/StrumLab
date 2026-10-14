@@ -30,3 +30,12 @@ Fase 6: importação de metadados e preparação de cancioneiro, sem prometer ac
 
 ## Definition of Done por fase
 Código inspecionado, testes executados, critérios demonstrados, migrations versionadas, documentação e decisões atualizadas, riscos e limitações declarados; não alegar validação não realizada.
+
+## Execução — 14/10/2026
+
+Fase 1 implementada e validada localmente com a stack e o modo local confirmados
+pelo usuário. PostgreSQL real, migration Flyway, API e jornada de health no navegador
+verificados. Evidências, comandos e limitações em [docs/execucao.md](../../docs/execucao.md)
+e [README operacional](../../README.md). CI preparado, ainda não executado remotamente.
+Fases 2–6 não implementadas. Próximo gate: biblioteca/editor, conforme prompt 02,
+com revisão das decisões específicas e autorização dessa fase.

@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: StrumLab local API
+  version: 0.1.0
+paths:
+  /api/v1/health:
+    get:
+      operationId: getHealth
+      responses:
+        '200':
+          description: API and migrated PostgreSQL available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          description: Database unavailable or workspace missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, database, mode]
+      properties:
+        status:
+          type: string
+          enum: [up, down]
+        database:
+          type: string
+          enum: [up, down]
+        mode:
+          type: string
+          enum: [local]

@@ -41,3 +41,22 @@ Responsável pela proposta: revisão documental assistida; aprovação do respon
 | D-017 | Microinterações discretas; GSAP opcional, relógio musical via Web Audio | Proposta | CSS suficiente para mockups; GSAP não é dependência obrigatória |
 
 As invariantes de revisão imutável, isolamento e sugestões separadas já constam das regras de negócio; o status proposto refere-se às tecnologias/estratégias usadas para cumpri-las. Nenhuma escolha pendente foi elevada a confirmada nesta entrega.
+
+## Registro de implementação — 14/10/2026
+
+Responsável: usuário do projeto, em confirmação explícita na sessão de implementação.
+Contexto: repositório sem código; início da Fase 1 conforme a sequência v1.1.
+Alternativas apresentadas: stack proposta com protótipo local, stack com login real,
+ou alteração de tecnologias. Escolha do responsável: **seguir com a proposta local**.
+
+| ID | Decisão | Estado nesta sessão | Consequência |
+|---|---|---|---|
+| D-002 | Next.js + React + TypeScript | Confirmada pelo usuário | Frontend em apps/web |
+| D-003 | Java 21 + Spring Boot | Confirmada pelo usuário | API em apps/api |
+| D-004 | PostgreSQL local via Docker Compose | Confirmada pelo usuário | Infraestrutura local; nenhuma contratação |
+| D-010 | Protótipo local de usuário único, sem login público | Confirmada pelo usuário | Processos e banco vinculados ao loopback; identidade local não é autenticação |
+
+Registros anteriores preservados como histórico. Escolhas de versões e ferramentas
+de teste são detalhes técnicos da Fase 1. Papel & Cordas é referência provisória de
+implementação; D-014 permanece proposta visual. Esta confirmação não aprova deploy,
+worker, integrações, fontes de conteúdo, samples ou implementação das fases seguintes.

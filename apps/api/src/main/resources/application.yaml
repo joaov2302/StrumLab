@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: strumlab
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://127.0.0.1:5433/strumlab}
+    username: ${POSTGRES_USER:strumlab}
+    password: ${POSTGRES_PASSWORD}
+  flyway:
+    enabled: true
+server:
+  address: 127.0.0.1
+  port: 8080
+  error:
+    include-message: never
+    include-stacktrace: never
+management:
+  endpoints:
+    web:
+      discovery:
+        enabled: false
+      exposure:
+        include: ""
