@@ -13,7 +13,7 @@ public class LocalAccessFilter extends OncePerRequestFilter {
         if (token == null || token.length() < 32) throw new IllegalStateException("Configure LOCAL_API_TOKEN com pelo menos 32 caracteres.");
         secret = token.getBytes(StandardCharsets.UTF_8);
     }
-    @Override protected boolean shouldNotFilter(HttpServletRequest request) { return !request.getRequestURI().startsWith("/api/v1/songs") && !request.getRequestURI().startsWith("/api/v1/songbooks") && !request.getRequestURI().startsWith("/api/v1/strumming-patterns"); }
+    @Override protected boolean shouldNotFilter(HttpServletRequest request) { return !request.getRequestURI().startsWith("/api/v1/songs") && !request.getRequestURI().startsWith("/api/v1/songbooks") && !request.getRequestURI().startsWith("/api/v1/strumming-patterns") && !request.getRequestURI().startsWith("/api/v1/audio-assets") && !request.getRequestURI().startsWith("/api/v1/jobs"); }
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String provided = request.getHeader("X-StrumLab-Local-Token");
         if (request.getHeader("Origin") != null || provided == null || !MessageDigest.isEqual(secret, provided.getBytes(StandardCharsets.UTF_8))) {

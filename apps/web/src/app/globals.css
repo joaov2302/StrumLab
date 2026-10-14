@@ -154,3 +154,11 @@ details label { margin-bottom:16px; }
 .practice-panel details { border-top:1px solid var(--border); margin-top:24px; }
 .book-strumming { border-top:1px solid var(--border); margin-top:16px; padding-top:16px; }
 @media(max-width:759px){.rhythm-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }.rhythm-filters>label:first-child { grid-column:span 2; }.practice-panel,.pattern-list>li { padding:16px; }.rhythm-grid { gap:4px; }.rhythm-grid li { padding:8px 0; gap:4px; }.rhythm-grid strong { font-size:26px; }.rhythm-grid small { font-size:9px; }.practice-controls { gap:16px; }}
+
+.analysis-fields { display:grid; grid-template-columns:1fr 2fr; gap:16px; margin:24px 0; }
+.analysis-events { list-style:none; padding:0; }
+.analysis-events li { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; border-bottom:1px solid var(--border); padding:16px 0; }
+.analysis-job { border-top:1px solid var(--border); margin-top:24px; padding-top:16px; }
+.analysis-assets audio { width:100%; max-width:600px; margin:16px 0; }
+.analysis-review ul { padding-left:24px; }
+@media(max-width:759px){.analysis-fields { grid-template-columns:1fr; }.analysis-events li { grid-template-columns:repeat(2,minmax(0,1fr)); }.analysis-assets .settings-panel { padding:16px; }}

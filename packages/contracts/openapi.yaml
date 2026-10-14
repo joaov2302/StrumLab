@@ -1656,6 +1656,241 @@ paths:
           description: Entrada inválida
       security:
         - LocalProxyToken: []
+  /api/v1/songs/{songId}/audio-assets:
+    parameters:
+      - name: songId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: listAudioAssets
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnalysisDetail'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
+    post:
+      operationId: uploadAudio
+      responses:
+        '202':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisDetail'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - rightsBasis
+              properties:
+                file:
+                  type: string
+                  format: binary
+                rightsBasis:
+                  type: string
+                  enum:
+                    - own
+                    - permission
+                    - public_domain
+              additionalProperties: false
+  /api/v1/audio-assets/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getAudioAsset
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisDetail'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
+    delete:
+      operationId: deletePrivateAudio
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisDetail'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
+  /api/v1/audio-assets/{id}/jobs:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: reprocessAudio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisReprocess'
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisDetail'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
+  /api/v1/audio-assets/{id}/audio:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getPrivateAudio
+      responses:
+        '200':
+          description: Private validated audio, no-store
+          content:
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Access denied
+        '409':
+          description: Not yet validated or deleted
+      security:
+        - LocalProxyToken: []
+  /api/v1/jobs/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getAnalysisJob
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
+  /api/v1/jobs/{id}/apply:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: acceptAnalysisSelection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisApply'
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDetail'
+        '403':
+          description: Local access denied
+        '404':
+          description: Not found
+        '409':
+          description: Conflict; refresh before replacing
+        '422':
+          description: Invalid input
+      security:
+        - LocalProxyToken: []
 components:
   schemas:
     Health:
@@ -2399,6 +2634,222 @@ components:
         refresh:
           type: boolean
         showInPdf:
+          type: boolean
+      additionalProperties: false
+    AnalysisChordEvent:
+      type: object
+      required:
+        - start
+        - end
+        - chord
+      properties:
+        start:
+          type: number
+        end:
+          type: number
+        chord:
+          type: string
+      additionalProperties: false
+    AnalysisResult:
+      type: object
+      required:
+        - schemaVersion
+        - algorithmVersion
+        - duration
+        - bpm
+        - key
+        - meter
+        - confidence
+        - chords
+        - warnings
+      properties:
+        schemaVersion:
+          type: integer
+        algorithmVersion:
+          type: string
+        duration:
+          type: number
+        bpm:
+          type: number
+          nullable: true
+        key:
+          type: string
+          nullable: true
+        meter:
+          type: string
+          nullable: true
+        confidence:
+          type: number
+          nullable: true
+        chords:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalysisChordEvent'
+        warnings:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    AnalysisAsset:
+      type: object
+      required:
+        - id
+        - songId
+        - extension
+        - mime
+        - rightsBasis
+        - sizeBytes
+        - durationSeconds
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        extension:
+          type: string
+          enum:
+            - wav
+            - mp3
+        mime:
+          type: string
+        rightsBasis:
+          type: string
+          enum:
+            - own
+            - permission
+            - public_domain
+        sizeBytes:
+          type: integer
+        durationSeconds:
+          type: number
+          nullable: true
+        status:
+          type: string
+          enum:
+            - pending
+            - valid
+            - invalid
+            - deleted
+        createdAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    AnalysisJob:
+      type: object
+      required:
+        - id
+        - assetId
+        - generation
+        - status
+        - attempts
+        - errorCode
+        - algorithmVersion
+        - createdAt
+        - finishedAt
+        - result
+      properties:
+        id:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        generation:
+          type: integer
+        status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - completed
+            - failed
+            - needs_input
+            - cancelled
+        attempts:
+          type: integer
+        errorCode:
+          type: string
+          nullable: true
+        algorithmVersion:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        result:
+          allOf:
+            - $ref: '#/components/schemas/AnalysisResult'
+          nullable: true
+      additionalProperties: false
+    AnalysisDetail:
+      type: object
+      required:
+        - asset
+        - jobs
+      properties:
+        asset:
+          $ref: '#/components/schemas/AnalysisAsset'
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalysisJob'
+      additionalProperties: false
+    AnalysisApply:
+      type: object
+      required:
+        - requestKey
+        - baseRevisionId
+        - draftVersion
+        - applyBpm
+        - bpm
+        - applyKey
+        - key
+        - applyChords
+        - chords
+      properties:
+        requestKey:
+          type: string
+          format: uuid
+        baseRevisionId:
+          type: string
+          format: uuid
+          nullable: true
+        draftVersion:
+          type: integer
+        applyBpm:
+          type: boolean
+        bpm:
+          type: integer
+          nullable: true
+        applyKey:
+          type: boolean
+        key:
+          type: string
+          nullable: true
+        applyChords:
+          type: boolean
+        chords:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalysisChordEvent'
+      additionalProperties: false
+    AnalysisReprocess:
+      type: object
+      required:
+        - currentJobId
+        - reprocess
+      properties:
+        currentJobId:
+          type: string
+          format: uuid
+        reprocess:
           type: boolean
       additionalProperties: false
   securitySchemes:

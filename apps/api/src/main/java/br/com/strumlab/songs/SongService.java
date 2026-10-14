@@ -74,6 +74,8 @@ public class SongService {
     }
     @Transactional
     public Detail save(UUID id, Edit edit) { check(id, edit); return revision(id, edit.content(), edit.content().sourceType()); }
+    @Transactional
+    public Detail acceptAnalysis(UUID id, Edit edit) { check(id, edit); return revision(id,edit.content(),"analysis_accepted"); }
     private Detail revision(UUID id, SongContent content, String source) {
         int number = jdbc.queryForObject("SELECT COALESCE(MAX(revision_no),0)+1 FROM song_revision WHERE song_id=?", Integer.class, id);
         UUID revision = UUID.randomUUID();

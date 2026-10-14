@@ -15,5 +15,30 @@ services:
       interval: 5s
       timeout: 5s
       retries: 12
+    networks: [default, analysis_private]
+  analysis-worker:
+    profiles: [analysis]
+    build: ../workers/music-analysis
+    image: strumlab-analysis:local
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-strumlab}
+      POSTGRES_USER: ${POSTGRES_USER:-strumlab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      PGHOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [analysis_private]
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=256m"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 64
+    restart: unless-stopped
+networks:
+  analysis_private:
+    internal: true
 volumes:
   postgres_data:
