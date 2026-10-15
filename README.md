@@ -1,10 +1,11 @@
 # StrumLab
 
 Da música ao seu cancioneiro. Aplicação local em Next.js/TypeScript, Java 21/Spring Boot
-e PostgreSQL. **Fases 1–4 implementadas:** fundação, biblioteca/editor, rascunhos,
+e PostgreSQL. **Fases 1–5 implementadas e validadas localmente:** fundação, biblioteca/editor, rascunhos,
 revisões imutáveis, transposição, capo, ChordPro básico, cancioneiros com prévia/PDF
 e prática Pop/Folk com samples licenciados, metrônomo e vínculo à cifra/PDF.
-Análise de áudio e integrações ficam nas fases correspondentes.
+Análise privada de MP3/WAV com sugestões de BPM/tom/acordes e aprovação seletiva.
+Integrações de playlists permanecem na Fase 6.
 
 ## Executar localmente
 
@@ -40,6 +41,16 @@ rode `node scripts/init-env.mjs` novamente para adicionar o token sem alterar a 
 Fontes licenciadas do PDF ficam em `assets/fonts`. O launcher prepara o worker local
 de PDF.js automaticamente; a exportação PDFKit não requer Chromium em runtime.
 Não exponha esse protótipo na rede ou publique bibliotecas sem autenticação.
+
+Para usar a análise assistida, inicie também o worker Python/FFmpeg:
+
+```powershell
+docker compose --env-file .env -f infra/compose.yaml --profile analysis up -d --build analysis-worker
+```
+
+Envie somente áudio autorizado. Estimativas não alteram a cifra até aprovação humana.
+Limites, retenção, benchmark e comandos de QA com banco/volume exclusivos em
+[Análise de áudio](docs/analise-audio.md).
 
 ## Verificar
 
@@ -107,3 +118,5 @@ os dados permanecem no volume. API e frontend encerram com Ctrl+C.
 - [Comparação dos motores de PDF](docs/pdf-spike.md)
 - [Prompt da Fase 4](StrumLab-documentacao-v1.1/prompts/04-fase-4-batidas.md)
 - [Contrato da prática e licença dos samples](docs/batidas.md)
+- [Prompt da Fase 5](StrumLab-documentacao-v1.1/prompts/05-fase-5-analise-audio.md)
+- [Contrato da análise e QA isolado](docs/analise-audio.md)

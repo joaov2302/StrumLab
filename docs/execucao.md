@@ -1,9 +1,9 @@
 # Estado real da implementação
 
-Data: 14/10/2026. Estado atual: **Fases 1–3 validadas localmente**.
+Data: 15/10/2026. Estado atual: **Fases 1–5 validadas localmente**.
 Stack e protótipo local de usuário único confirmados; continuação para biblioteca/editor
 autorizada pelo usuário após a entrega da fundação. Registros abaixo preservam o
-histórico; a seção Fase 3 apresenta o gate atual.
+histórico; a seção Fase 5 apresenta o gate atual.
 
 ## Análise inicial
 
@@ -139,6 +139,7 @@ como próximo passo. Sem alterações de stack, autenticação pública ou servi
 | Inspeção visual | Editor desktop/celular e leitor celular inspecionados |
 | Lint/typecheck/build | Aprovados |
 | Auditoria npm de produção | Zero vulnerabilidades |
+| Launchers de QA | API/web iniciadas pelos scripts; health pelo proxy, ambiente e rótulo final conferidos |
 
 Total: **49 testes automatizados** (21 Java, 20 Vitest, 8 Playwright).
 O teste de recuperação de health usa respostas simuladas; as jornadas de cifras
@@ -308,3 +309,90 @@ Safari/Firefox, audição humana/dispositivos físicos, PDF/UA e auditoria integ
 leitor de tela não validados. Não há análise de áudio, playlist, gravação ou mudança
 automática de acordes. CI atualizado mas não executado remotamente; sem push/deploy.
 Próxima fase: **Fase 5 — análise assistida de áudio autorizado**, mediante solicitação.
+
+## 15/10/2026 — Fase 5 — análise assistida de áudio
+
+Continuação solicitada pelo usuário conforme a documentação. Código da Fase 5 já
+existia no checkout, mas não tinha gate final nem registro operacional. A entrega
+foi retomada nesse escopo; playlists/Fase 6 não foram iniciadas.
+
+### Implementação conferida
+
+- Migration V5: áudio privado, jobs, resultados imutáveis e aceite idempotente.
+  Upload validado, quotas, deduplicação SHA-256, ownership e exclusão dos bytes
+  sem perda de resultados/revisões anteriores.
+- Worker Python 3.12/FFmpeg/librosa, fila persistida, SKIP LOCKED, leases,
+  recuperação de interrupção, timeout e limite de tentativas. Container restrito,
+  sem rede externa, com limites de memória/CPU/PIDs e temporários.
+- Sugestões experimentais de BPM/tom/tríades; confiança e compasso ausentes (`null`).
+  Timeline independente da letra; nenhuma extração de texto ou tablatura.
+- Correção/seleção de sugestões e comparação com rascunho. Aprovação explícita
+  cria `analysis_accepted`; conflito preserva correções locais. Reprocessar/excluir
+  não modifica cifra, capo, revisões aceitas ou PDF histórico.
+
+### Conclusão desta retomada
+
+A falha E2E anterior esperava `attempts=2` em cinco segundos. Na repetição isolada,
+o retry passou com a implementação existente; na suíte completa, sua jornada levou
+dez segundos. A espera agora observa tentativa 2 e status final failed, com timeout
+compatível com a fila. Reprocessamento exige nova geração/ID e conclusão, evitando
+aceitar completed do job anterior. Não foi necessário mudar a lógica de retry.
+
+Acrescentados testes de integridade antes do decoder e do ciclo de três tentativas
+de asset inválido, seguido de atendimento de outro job. CI passou a construir,
+testar e iniciar o worker e habilitar LIVE_ANALYSIS, com diagnóstico/limpeza.
+Indicação lateral atualizada para Fase 5.
+
+Novo `infra/compose.test.yaml`: projeto/volume exclusivos `strumlab-qa`, PostgreSQL
+5434, API 8081 e web 3002. Scripts `test-api.ps1 -Isolated`, `start-api.ps1 -Isolated`
+e `load-qa-env.ps1` não leem `.env` pessoal; `test-worker.ps1` usa esse banco exclusivo.
+Nenhum dado de teste foi gravado no banco pessoal, nenhum volume pessoal foi apagado
+e a instalação principal não foi migrada ou atualizada nesta retomada.
+
+### Validações executadas
+
+| Verificação | Resultado local |
+|---|---|
+| `test-api.ps1 -Isolated` | Maven verify: 16 unitários + 16 integrações aprovados, PostgreSQL separado |
+| Migrations V1–V5 | Aplicadas em banco QA inicialmente vazio; reexecução validou schema |
+| `test-worker.ps1` | Sete testes aprovados sem skips: MP3/WAV, silêncio, timestamps, leases, SKIP LOCKED, integridade e três tentativas |
+| `npm.cmd test` | 35 testes Vitest aprovados |
+| Playwright com LIVE_API/LIVE_ANALYSIS | 16 cenários aprovados sem skips sobre build de produção; suíte em 16,8 s |
+| Jornada de análise real | Upload → worker → correção → conflito/recuperação → revisão 3 → reprocessamento → exclusão |
+| Preservação/segurança | Texto/capo/tom não selecionado preservados, resultado separado, áudio no-store, Origin/cross-site negados |
+| Lint / tipos / build | Aprovados |
+| Auditoria npm de produção | Zero vulnerabilidades |
+| Spike STFT/CQT | Reexecutado sem rede em cinco fixtures autorizadas |
+| UI | Capturas desktop/celular inspecionadas; 360/390/1440 px sem overflow ou erros JavaScript |
+
+Total: **90 testes automatizados** (32 Java, 35 Vitest, sete Python e 16 Playwright).
+As duas jornadas de análise usam API/PostgreSQL/worker reais; permanecem cenários
+simulados de recuperação de health e transporte de batidas das fases anteriores.
+Evidências em `.cache/phase5/` e relatórios ignorados pelo Git.
+
+No spike, CQT teve tom esperado em 5/5 e tríades com acurácia de 90,9–100%; STFT,
+tom em 2/5 e tríades de 80–97%. BPM teve erro de 0,27–2,38%. CQT medido em
+0,342–0,608 s após aquecimento; primeira análise STFT 10,638 s. Não é benchmark de
+generalização ou comparação controlada de desempenho. Num worker novo, a primeira
+jornada real levou 38,5 s, com primeiro processamento registrado em 27,94 s;
+os tempos do spike não são SLA de upload/processamento.
+
+Ocorrências resolvidas: Docker Desktop precisou ser iniciado; primeiro teste Python
+antecedeu migrations e falhou por tabela ausente. Primeiro Java no ambiente novo
+não tinha token; repetido com ambiente QA completo. JAR aberto bloqueou repackage
+no Windows; API temporária encerrada e verify repetido com sucesso. Essas falhas
+não foram contadas como aceite.
+
+### Limites e próximo gate
+
+Contrato, retenção, licenças e comandos: [analise-audio.md](analise-audio.md).
+Baseline só reconhece tríades maiores/menores, sem confiança calibrada ou compasso;
+não promete transcrição perfeita. Áudio fica até exclusão explícita; backups
+anteriores seguem sua retenção externa. Sem storage remoto contratado.
+Protótipo local sem autenticação pública. Chromium validado; Firefox, Safari,
+leitor de tela e dispositivos físicos não certificados.
+
+CI atualizado, não executado remotamente. Sem commit, push ou deploy.
+Serviços temporários de QA encerrados ao final; volume de QA preservado.
+Próximo gate: **Fase 6 — metadados autorizados de playlists**, mediante nova
+solicitação e revisão de provedores/credenciais/termos. Não iniciada.

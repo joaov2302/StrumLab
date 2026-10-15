@@ -29,6 +29,37 @@ class AnalysisTests(unittest.TestCase):
             with self.assertRaises(InvalidAudio):decode(p,'wav')
 
 class WorkerLeaseTests(unittest.TestCase):
+    def test_integrity_failure_never_starts_decoder(self):
+        from worker import process
+        from unittest.mock import patch
+        with patch('worker.subprocess.run') as decoder:
+            self.assertEqual(process({'audio_bytes':b'changed','sha256':'wrong'}),{'error':'integrity_failed'})
+            decoder.assert_not_called()
+
+    @unittest.skipUnless(__import__('os').getenv('RUN_DB_TESTS')=='1','requires isolated strumlab_test')
+    def test_invalid_asset_retry_counts_claims_and_stops_at_three(self):
+        from worker import connect,claim,finish
+        import os
+        self.assertEqual(os.getenv('POSTGRES_DB'),'strumlab_test')
+        with connect() as conn:
+            owner,song,asset,job=[uuid.uuid4() for _ in range(4)]
+            conn.execute('INSERT INTO workspace(id,name) VALUES (%s,%s)',(owner,'Retry fixture'))
+            conn.execute("INSERT INTO song(id,owner_id,title,status) VALUES (%s,%s,'Retry fixture','draft')",(song,owner))
+            conn.execute("INSERT INTO audio_asset(id,song_id,owner_id,sha256,extension,mime,rights_basis,size_bytes,audio_bytes,status) VALUES (%s,%s,%s,'test','wav','audio/wav','own',44,%s,'invalid')",(asset,song,owner,b'0'*44))
+            conn.execute("INSERT INTO processing_job(id,asset_id,generation,algorithm_version,created_at) VALUES (%s,%s,1,'chroma-baseline-v1','1960-01-01')",(job,asset));conn.commit()
+            for attempt in range(1,4):
+                claimed=claim(conn);self.assertEqual(claimed['id'],job)
+                self.assertTrue(finish(conn,claimed,{'error':'invalid_audio'}))
+                row=conn.execute('SELECT status,attempts FROM processing_job WHERE id=%s',(job,)).fetchone()
+                self.assertEqual(row,{'status':'failed','attempts':attempt})
+                conn.execute("UPDATE processing_job SET status='pending',finished_at=NULL WHERE id=%s",(job,));conn.commit()
+            next_id=uuid.uuid4()
+            conn.execute("INSERT INTO processing_job(id,asset_id,generation,algorithm_version,created_at) VALUES (%s,%s,2,'chroma-baseline-v1','1960-01-02')",(next_id,asset));conn.commit()
+            next_claim=claim(conn);self.assertEqual(next_claim['id'],next_id)
+            self.assertTrue(finish(conn,next_claim,{'error':'invalid_audio'}))
+            conn.execute("UPDATE processing_job SET status='cancelled' WHERE id=%s",(job,))
+            conn.execute("UPDATE audio_asset SET status='deleted',audio_bytes=NULL WHERE id=%s",(asset,));conn.commit()
+
     @unittest.skipUnless(__import__('os').getenv('RUN_DB_TESTS')=='1','requires isolated strumlab_test')
     def test_expired_cancelled_claims_cannot_publish_and_skip_locked(self):
         from worker import connect,claim,finish

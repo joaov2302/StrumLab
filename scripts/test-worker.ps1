@@ -1,6 +1,7 @@
-. "$PSScriptRoot/load-env.ps1"
+$ErrorActionPreference = 'Stop'
+$projectRoot = Split-Path -Parent $PSScriptRoot
 Push-Location $projectRoot
 try {
-    docker compose --env-file .env -f infra/compose.yaml --profile analysis run --rm --no-deps -e POSTGRES_DB=strumlab_test -e RUN_DB_TESTS=1 analysis-worker python -m unittest -v test_analysis
+    docker compose -f infra/compose.test.yaml run --build --rm --no-deps -e RUN_DB_TESTS=1 analysis-worker python -m unittest -v test_analysis
     if ($LASTEXITCODE -ne 0) { throw 'Validacao do worker falhou.' }
 } finally { Pop-Location }

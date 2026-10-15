@@ -71,3 +71,16 @@ Marco MVP manual das Fases 1–4 disponível localmente. Evidências/limites no
 [registro de execução](../../docs/execucao.md) e [contrato de batidas](../../docs/batidas.md).
 CI preparado e não executado remotamente; sem publicação. Fases 5–6 não implementadas.
 Próximo gate: Fase 5 — análise assistida de arquivos autorizados, somente após pedido.
+
+## Continuação — 15/10/2026 — Fase 5
+
+Análise assistida privada concluída e validada localmente: upload autorizado,
+fila persistida, worker Python/FFmpeg, sugestões experimentais de BPM/tom/tríades,
+revisão seletiva com conflito e preservação das correções humanas. Spike STFT/CQT
+reexecutado; CQT é baseline experimental para o conjunto pequeno, sem confiança
+calibrada. Gate: 90 testes (32 Java, 35 Vitest, sete Python, 16 Playwright), sem skips,
+lint, tipos, build, PostgreSQL exclusivo de QA e inspeção visual desktop/celular.
+Comandos/limites em [analise-audio.md](../../docs/analise-audio.md), evidências em
+[execucao.md](../../docs/execucao.md). CI preparado; execução remota não verificada.
+Fase 6 não implementada. Próximo gate: playlists por metadados autorizados,
+somente após nova solicitação e revisão das condições dos provedores.

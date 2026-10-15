@@ -1,4 +1,13 @@
-. "$PSScriptRoot/load-env.ps1"
+param([switch]$Isolated)
+if ($Isolated) {
+    . "$PSScriptRoot/load-qa-env.ps1"
+    $ErrorActionPreference = 'Stop'
+    $env:TEST_DATABASE_URL = $env:DATABASE_URL
+    docker compose -f "$projectRoot/infra/compose.test.yaml" up -d --wait postgres
+    if ($LASTEXITCODE -ne 0) { throw 'PostgreSQL de QA indisponivel.' }
+} else {
+    . "$PSScriptRoot/load-env.ps1"
+}
 $env:DEBUG = 'false'
 if (!$env:TEST_DATABASE_URL) { & "$PSScriptRoot/create-test-db.ps1" }
 $env:DATABASE_URL = if ($env:TEST_DATABASE_URL) { $env:TEST_DATABASE_URL } else { 'jdbc:postgresql://127.0.0.1:5433/strumlab_test' }

@@ -1,0 +1,40 @@
+name: strumlab-qa
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: strumlab_test
+      POSTGRES_USER: strumlab_test
+      POSTGRES_PASSWORD: qa-disposable-local-only
+    ports: ["127.0.0.1:5434:5432"]
+    volumes: [qa_postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U strumlab_test -d strumlab_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    networks: [default, analysis_private]
+  analysis-worker:
+    build: ../workers/music-analysis
+    image: strumlab-analysis:local
+    environment:
+      POSTGRES_DB: strumlab_test
+      POSTGRES_USER: strumlab_test
+      POSTGRES_PASSWORD: qa-disposable-local-only
+      PGHOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [analysis_private]
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=256m"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 64
+volumes:
+  qa_postgres_data:
+networks:
+  analysis_private:
+    internal: true

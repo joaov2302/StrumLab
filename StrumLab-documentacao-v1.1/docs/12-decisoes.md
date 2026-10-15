@@ -136,3 +136,31 @@ D-025–D-027: escolhas técnicas implementadas no protótipo local da fase auto
 Vínculo e snapshot de batida propostos em D-015 estão implementados neste escopo;
 não significa confirmação de recursos de colaboração, hosting ou análise automática.
 Contrato detalhado e limites em `docs/batidas.md` do repositório.
+
+## Continuação — 15/10/2026 — Fase 5
+
+Escopo: retomada da análise assistida após pedido do usuário para prosseguir conforme
+a documentação. Escolhas técnicas locais sob responsabilidade do agente; não são
+aprovação individual de todos os ADRs nem autorização de publicação ou playlists.
+
+- **D-028:** Python 3.12 + FFmpeg + librosa e chroma CQT como baseline experimental,
+  após spike STFT/CQT em cinco fixtures próprias/CC0 anotadas. Sem modelo final ou
+  confiança calibrada. D-005 aplicada ao protótipo da fase autorizada.
+- **D-029:** Áudio privado em BYTEA no PostgreSQL local, UUID opaco/hash, quotas
+  20 MiB por arquivo/100 MiB por biblioteca/dez ativos por música, 2–600 segundos.
+  Retenção até exclusão explícita; remove bytes/cancela jobs e mantém resultados
+  e revisões. Alternativa S3: D-011 segue pendente para cenário remoto. Exclusão
+  na aplicação não apaga backups anteriores.
+- **D-030:** Fila no banco, alternativa inicial de D-012, SKIP LOCKED, lease de 240 s,
+  processo de até 180 s, três tentativas por job/cinco gerações por asset. Falha
+  terminal exige retry explícito. Reprocessamento não sobrescreve revisões.
+  Worker executado em container restrito, sem rede externa.
+- **D-031:** Compose exclusivo de QA em 5434, volume próprio e credenciais
+  descartáveis, sem ler `.env` pessoal; scripts `-Isolated` e CI com worker real.
+  Alternativa anterior de banco lógico no volume pessoal continua disponível nos
+  scripts antigos; validação desta retomada usou somente o projeto de QA.
+
+Status D-028–D-031: escolhas técnicas implementadas no escopo local da Fase 5.
+Contrato em `docs/analise-audio.md`; licenças em `workers/music-analysis/THIRD_PARTY.md`.
+Nenhuma imagem/binário publicado; distribuição futura exige revisar obrigações das
+dependências, incluindo o build GPL do FFmpeg utilizado. Sem hosting contratado.

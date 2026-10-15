@@ -1,5 +1,12 @@
-param([string]$DatabaseUrl, [int]$Port = 8080)
-. "$PSScriptRoot/load-env.ps1"
+param([string]$DatabaseUrl, [int]$Port = 8080, [switch]$Isolated)
+if ($Isolated) {
+    if ($DatabaseUrl) { throw 'Nao combine Isolated com DatabaseUrl.' }
+    . "$PSScriptRoot/load-qa-env.ps1"
+    $ErrorActionPreference = 'Stop'
+    if (!$PSBoundParameters.ContainsKey('Port')) { $Port = 8081 }
+} else {
+    . "$PSScriptRoot/load-env.ps1"
+}
 $env:DEBUG = 'false'
 if ($DatabaseUrl) { $env:DATABASE_URL = $DatabaseUrl }
 $env:SERVER_PORT = [string]$Port
