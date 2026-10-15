@@ -1,0 +1,11 @@
+import type {components} from './api.generated';
+export type PlaylistSummary=components['schemas']['PlaylistSummary'];
+export type PlaylistDetail=components['schemas']['PlaylistDetail'];
+export type PlaylistItem=components['schemas']['PlaylistItem'];
+export type SpotifyConnection=components['schemas']['SpotifyConnection'];
+export async function playlistRequest<T>(path='',method='GET',data?:unknown,signal?:AbortSignal):Promise<T>{
+  const response=await fetch(`/api/playlists${path}`,{method,headers:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data),cache:'no-store',signal});
+  const value=await response.json();if(!response.ok)throw new Error(value.detail??'Não foi possível concluir a importação.');return value as T;
+}
+export const playlistStatus=(status:string)=>({pending:'Na fila',processing:'Processando',ready:'Preparada',failed:'Falha',needs_input:'Precisa de conteúdo autorizado',skipped:'Pulada',cancelled:'Cancelada'}[status]??status);
+export const playlistError=(code:string|null)=>({connection_required:'Conecte sua conta Spotify e tente novamente.',token_expired:'A autorização expirou. Conecte novamente.',access_denied:'Sem acesso: verifique se você é dono ou colaborador da playlist, se a conta está autorizada no aplicativo e os requisitos do Spotify.',playlist_unavailable:'Playlist removida ou não disponível para esta conta.',rate_limited:'O Spotify limitou as requisições. Aguarde antes de tentar novamente.',playlist_changed:'A playlist mudou durante a leitura. Tente novamente para preservar a ordem.',playlist_too_large:'Limite local: 200 itens por playlist.',item_unavailable:'Faixa local, removida ou não suportada. Vincule conteúdo próprio ou pule este item.',authorized_content_required:'Sem arquivo autorizado ou cifra manual. Nenhuma análise foi realizada.',revision_unavailable:'A revisão vinculada ficou indisponível. Escolha uma revisão válida.',lease_expired:'Processamento interrompido; tentativas esgotadas.',provider_failed:'O Spotify não concluiu a requisição.',provider_unavailable:'Não foi possível acessar o Spotify.',invalid_response:'O Spotify retornou dados incompatíveis.'}[code??'']??'Não foi possível preparar este item.');

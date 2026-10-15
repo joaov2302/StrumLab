@@ -5,7 +5,9 @@ e PostgreSQL. **Fases 1–5 implementadas e validadas localmente:** fundação, 
 revisões imutáveis, transposição, capo, ChordPro básico, cancioneiros com prévia/PDF
 e prática Pop/Folk com samples licenciados, metrônomo e vínculo à cifra/PDF.
 Análise privada de MP3/WAV com sugestões de BPM/tom/acordes e aprovação seletiva.
-Integrações de playlists permanecem na Fase 6.
+**Fase 6 implementada:** playlists Spotify por API oficial, OAuth/PKCE, seleção,
+pendências por faixa e criação parcial de cancioneiros. Validada com Spotify
+sintético e API/PostgreSQL reais; autorização da conta Spotify real ainda pendente.
 
 ## Executar localmente
 
@@ -51,6 +53,12 @@ docker compose --env-file .env -f infra/compose.yaml --profile analysis up -d --
 Envie somente áudio autorizado. Estimativas não alteram a cifra até aprovação humana.
 Limites, retenção, benchmark e comandos de QA com banco/volume exclusivos em
 [Análise de áudio](docs/analise-audio.md).
+
+Para playlists, configure `SPOTIFY_CLIENT_ID` e o callback no `.env`, reinicie a API
+e abra **Playlists → Conectar Spotify**. A conexão usa a página oficial do Spotify;
+Client Secret não é necessário. Configuração, restrições e QA isolado em
+[Playlists Spotify](docs/playlists.md). A leitura de faixas depende de você ser
+dono ou colaborador da playlist e das permissões do seu aplicativo Spotify.
 
 ## Verificar
 
@@ -120,3 +128,4 @@ os dados permanecem no volume. API e frontend encerram com Ctrl+C.
 - [Contrato da prática e licença dos samples](docs/batidas.md)
 - [Prompt da Fase 5](StrumLab-documentacao-v1.1/prompts/05-fase-5-analise-audio.md)
 - [Contrato da análise e QA isolado](docs/analise-audio.md)
+- [Fase 6: playlists Spotify e configuração](docs/playlists.md)

@@ -450,6 +450,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/playlist-imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listPlaylistImports"];
+        put?: never;
+        post: operations["createPlaylistImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/playlist-imports/connection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getSpotifyConnection"];
+        put?: never;
+        post?: never;
+        delete: operations["disconnectSpotify"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/playlist-imports/connection/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["startSpotifyConnection"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/playlist-imports/connection/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["completeSpotifyConnection"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/playlist-imports/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get: operations["getPlaylistImport"];
+        put?: never;
+        post?: never;
+        delete: operations["deletePlaylistImport"];
+        options?: never;
+        head?: never;
+        patch: operations["updatePlaylistImport"];
+        trace?: never;
+    };
+    "/api/v1/playlist-imports/{id}/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updatePlaylistImportItem"];
+        trace?: never;
+    };
+    "/api/v1/playlist-imports/{id}/songbooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createPlaylistSongbook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -776,6 +895,92 @@ export interface components {
             /** Format: uuid */
             currentJobId: string;
             reprocess: boolean;
+        };
+        SpotifyConnection: {
+            configured: boolean;
+            connected: boolean;
+            redirectUri: string;
+        };
+        SpotifyStart: {
+            authorizationUrl: string;
+        };
+        SpotifySession: {
+            /** Format: uuid */
+            browserSession: string;
+        };
+        SpotifyCallback: {
+            browserSession: string;
+            state: string;
+            code: string | null;
+            error: string | null;
+        };
+        PlaylistSummary: {
+            /** Format: uuid */
+            id: string;
+            externalId: string;
+            sourceUrl: string;
+            title: string;
+            /** @enum {string} */
+            status: "pending" | "processing" | "ready" | "failed" | "cancelled";
+            attempts: number;
+            errorCode: string | null;
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            retryAfter: string | null;
+        };
+        PlaylistItem: {
+            /** Format: uuid */
+            id: string;
+            position: number;
+            externalId: string | null;
+            title: string;
+            artist: string;
+            available: boolean;
+            selected: boolean;
+            /** @enum {string} */
+            status: "needs_input" | "pending" | "processing" | "ready" | "failed" | "skipped" | "cancelled";
+            errorCode: string | null;
+            attempts: number;
+            /** Format: uuid */
+            songId: string | null;
+            /** Format: uuid */
+            revisionId: string | null;
+        };
+        PlaylistDetail: {
+            playlist: components["schemas"]["PlaylistSummary"];
+            items: components["schemas"]["PlaylistItem"][];
+        };
+        PlaylistCreate: {
+            url: string;
+        };
+        PlaylistAction: {
+            version: number;
+            /** @enum {string} */
+            action: "cancel" | "retry";
+        };
+        PlaylistItemEdit: {
+            version: number;
+            /** @enum {string} */
+            action: "select" | "link" | "copy" | "retry" | "skip" | "cancel";
+            selected?: boolean;
+            /** Format: uuid */
+            songId?: string;
+            /** Format: uuid */
+            revisionId?: string;
+        };
+        PlaylistExport: {
+            version: number;
+            /** Format: uuid */
+            requestKey: string;
+            title: string;
+            itemIds: string[];
+            allowPartial: boolean;
+            allowDuplicates: boolean;
+        };
+        PlaylistDeleted: {
+            deleted: boolean;
         };
     };
     responses: never;
@@ -3346,6 +3551,1152 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    listPlaylistImports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistSummary"][];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    createPlaylistImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlaylistCreate"];
+            };
+        };
+        responses: {
+            /** @description Operation result */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistDetail"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    getSpotifyConnection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpotifyConnection"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    disconnectSpotify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpotifyConnection"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    startSpotifyConnection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpotifySession"];
+            };
+        };
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpotifyStart"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    completeSpotifyConnection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpotifyCallback"];
+            };
+        };
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpotifyConnection"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    getPlaylistImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistDetail"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    deletePlaylistImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistDeleted"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    updatePlaylistImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlaylistAction"];
+            };
+        };
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistDetail"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    updatePlaylistImportItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlaylistItemEdit"];
+            };
+        };
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistDetail"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+        };
+    };
+    createPlaylistSongbook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlaylistExport"];
+            };
+        };
+        responses: {
+            /** @description Operation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookDetail"];
+                };
+            };
+            /** @description Operation not completed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
+            };
+            /** @description Operation not completed */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["SongProblem"];
+                };
             };
         };
     };

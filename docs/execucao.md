@@ -1,9 +1,10 @@
 # Estado real da implementação
 
-Data: 15/10/2026. Estado atual: **Fases 1–5 validadas localmente**.
+Data: 15/10/2026. Estado atual: **Fases 1–5 validadas localmente; Fase 6
+implementada e validada em QA com Spotify sintético**. OAuth com conta real pendente.
 Stack e protótipo local de usuário único confirmados; continuação para biblioteca/editor
 autorizada pelo usuário após a entrega da fundação. Registros abaixo preservam o
-histórico; a seção Fase 5 apresenta o gate atual.
+histórico; a seção Fase 6 apresenta o gate atual.
 
 ## Análise inicial
 
@@ -396,3 +397,82 @@ CI atualizado, não executado remotamente. Sem commit, push ou deploy.
 Serviços temporários de QA encerrados ao final; volume de QA preservado.
 Próximo gate: **Fase 6 — metadados autorizados de playlists**, mediante nova
 solicitação e revisão de provedores/credenciais/termos. Não iniciada.
+
+## 15/10/2026 — Fase 6 — playlists Spotify
+
+Usuário autorizou a próxima fase, escolheu Spotify e cadastrou o aplicativo.
+Client ID configurado apenas no `.env` ignorado pelo Git. Trabalho interrompido
+para explicar o cadastro e retomado após pedido explícito de conclusão.
+Não houve autorização da conta Spotify pelo agente nem acesso à playlist pessoal.
+
+### Entrega
+
+- V6: importação, itens/jobs isolados e seleção idempotente de exportação. V7:
+  hash da conta vinculado ao workspace. Tokens/verifier somente em memória.
+- API oficial `/playlists/{id}/items`, OAuth Authorization Code/PKCE, scopes de
+  leitura, state de uso único vinculado a cookie HttpOnly, refresh após expiração
+  e guardas locais de token/Host/Origin/cross-site. Callback limpa a URL sensível.
+- Importação assíncrona, limite de 200 itens/20 playlists, ordem e duplicatas,
+  conferência do snapshot, URLs oficiais fixas e limites de resposta/timeout.
+  403/404/429 têm estado consultável; Retry-After impede repetição antecipada.
+- Preparação por faixa sem criar conteúdo fictício: vincular revisão autorizada,
+  copiar explicitamente para cifra independente, pular, cancelar ou repetir.
+  Falha de uma faixa não impede preparar as demais. Conflitos retornam 409.
+- Livro parcial com seleção de revisões fixadas em ordem; confirmação para omitir
+  pendências e para repetir música. Transação e chave/payload idempotentes impedem
+  duplicação após perda de resposta. Prévia/download usam o PDF persistido existente.
+- Metadados Spotify permanecem separados de letra/acordes/áudio e do conteúdo PDF.
+  Links e logo oficial atribuem a origem na UI, sem capas armazenadas.
+- Trocar conta remove metadados anteriores; reconectar mesma conta preserva-os.
+  Desconectar apaga tokens, vínculo e importações, preservando cifras/livros manuais.
+  Limite técnico de retenção: 30 dias sem atividade; backups têm política própria.
+- Nova navegação/telas de playlists, layout responsivo, estados de recuperação,
+  busca paginada de cifras e confirmação de exclusão/desconexão.
+
+### Evidências
+
+| Verificação | Resultado local |
+|---|---|
+| Maven verify / `test-api.ps1 -Isolated` | 47 testes aprovados: 22 unitários + 25 integrações |
+| Migrations | V6/V7 aplicadas no PostgreSQL de QA em 5434; validação de V1–V7 na reexecução |
+| Novos casos Java | URL/SSRF, PKCE/binding/state repetido, refresh, paginação, null/duplicatas, 403/404/429, snapshot/limite, ownership, conflito, retry, cópia, conta e publicação após cancelamento |
+| Vitest | 35 testes aprovados |
+| Worker Python | Sete testes aprovados, sem skips, contra PostgreSQL de QA |
+| Playwright | 18 cenários aprovados, sem skips, em 41,7 s, build de produção |
+| Jornada de playlists | OAuth sintético → importar quatro itens em duas páginas → vincular duas posições → confirmar parcial/duplicata → livro/PDF → desconectar |
+| Segurança E2E | Callback inválido/cross-site negados; payload de conexão sem tokens; revisão original preservada após exportação/desconexão |
+| Lint / typecheck / build | Aprovados |
+| Auditoria npm de produção | Zero vulnerabilidades |
+| UI | 320/360/390/768/1024/1440 px sem overflow/erros JavaScript; capturas desktop/celular inspecionadas e skip link por teclado |
+
+Total: **107 testes automatizados** (47 Java, 35 Vitest, sete Python, 18 Playwright).
+Os dois cenários Spotify usam somente respostas sintéticas de um servidor HTTP
+local, com API/PostgreSQL reais. Testes de áudio e regressão das fases anteriores
+também passaram. O simulador não entra no JAR de produção e o launcher exige
+`strumlab_test`. CI foi atualizado para esse mesmo fluxo, não executado remotamente.
+
+Durante QA, a comparação JSON de uma chave de exportação tratava números Java
+long e JSON integer como diferentes: corrigida por desserialização tipada do
+payload. A caixa de seleção também revertia antes da resposta de gravação:
+feedback imediato com rollback e suspensão de polling durante escrita resolveram
+a jornada. Um seletor E2E encontrava o alert do roteador Next além do alerta do
+produto; limitado ao main. Schedulers são desativados nos forks Maven de testes,
+evitando disputa com fixtures; testes de worker invocam os jobs explicitamente.
+Falhas intermediárias não foram contadas como aprovação.
+
+Evidências locais ignoradas pelo Git em `.cache/phase6/`, além dos relatórios Maven
+e Playwright. Banco/volume pessoal não receberam fixtures, migrations ou limpeza
+nesta fase. Serviços temporários foram usados em 5434/8081/3002/8130.
+API/simulador/frontend e containers de QA encerrados ao final, volume preservado.
+
+### Limites e encerramento
+
+Implementação concluída e validada no ambiente controlado. **Conexão e importação
+com conta Spotify real continuam pendentes da autorização do usuário** e das
+permissões/quota do aplicativo. Isso não foi tratado como teste real aprovado.
+Uso atual depende de ser dono/colaborador da playlist; modo de desenvolvimento
+tem requisitos do Spotify, documentados com fontes em [playlists.md](playlists.md).
+
+Sem commit, push, deploy ou publicação de biblioteca. Sem validação remota do CI,
+Firefox/Safari/leitor de tela integral. O protótipo continua restrito ao loopback;
+não é autenticação pública. Nenhuma implementação da Fase 7 foi iniciada.

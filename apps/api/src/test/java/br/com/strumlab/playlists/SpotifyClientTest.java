@@ -1,0 +1,19 @@
+package br.com.strumlab.playlists;
+import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import java.net.URI;
+import java.util.*;
+import static br.com.strumlab.playlists.PlaylistModels.*;
+import static org.assertj.core.api.Assertions.*;
+
+class SpotifyClientTest {
+    static final String CALLBACK="http://127.0.0.1:3002/api/playlists/connection/callback";
+    static void connect(SpotifyClient client){String binding=UUID.randomUUID().toString();var start=client.start(binding);client.callback(new Callback(binding,FakeSpotify.params(URI.create(start.authorizationUrl()).getRawQuery()).get("state"),"fixture-code",null));}
+    SpotifyClient client(FakeSpotify fake){return new SpotifyClient(new ObjectMapper(),"fixture-client",CALLBACK,fake.base()+"/v1",fake.base());}
+    @Test void strictUrlsNeverAllowArbitraryHostsOrSchemes(){assertThat(SpotifyClient.playlistId("https://open.spotify.com/playlist/"+"P".repeat(22)+"?si=test")).isEqualTo("P".repeat(22));for(String url:List.of("http://open.spotify.com/playlist/"+"P".repeat(22),"https://open.spotify.com.evil/playlist/"+"P".repeat(22),"https://user@open.spotify.com/playlist/"+"P".repeat(22),"https://127.0.0.1/private","spotify:playlist:"+"P".repeat(22)))assertThatThrownBy(()->SpotifyClient.playlistId(url)).isInstanceOf(br.com.strumlab.songs.SongProblem.class);}
+    @Test void pkceBindingAndSingleUseState()throws Exception{try(var fake=new FakeSpotify(0)){var c=client(fake);String binding=UUID.randomUUID().toString();var args=FakeSpotify.params(URI.create(c.start(binding).authorizationUrl()).getRawQuery());assertThat(args.get("code_challenge_method")).isEqualTo("S256");assertThatThrownBy(()->c.callback(new Callback("wrong",args.get("state"),"fixture-code",null))).isInstanceOf(br.com.strumlab.songs.SongProblem.class);c.callback(new Callback(binding,args.get("state"),"fixture-code",null));String expected=Base64.getUrlEncoder().withoutPadding().encodeToString(java.security.MessageDigest.getInstance("SHA-256").digest(fake.lastVerifier.getBytes(java.nio.charset.StandardCharsets.US_ASCII)));assertThat(args.get("code_challenge")).isEqualTo(expected);assertThatThrownBy(()->c.callback(new Callback(binding,args.get("state"),"fixture-code",null))).isInstanceOf(br.com.strumlab.songs.SongProblem.class);assertThat(c.accountId()).isEqualTo("fixture-account");c.disconnect();assertThat(c.connection().connected()).isFalse();}}
+    @Test void paginatesInOrderKeepsDuplicatesAndUnavailableItems()throws Exception{try(var fake=new FakeSpotify(0)){var c=client(fake);connect(c);var result=c.playlist("P".repeat(22));assertThat(result.items()).hasSize(4);assertThat(result.items()).extracting(RemoteItem::position).containsExactly(0,1,2,3);assertThat(result.items().get(1).available()).isFalse();assertThat(result.items().get(0).externalId()).isEqualTo(result.items().get(2).externalId());}}
+    @Test void rateLimitHonorsRetryAfterWithoutRepeatedCalls()throws Exception{try(var fake=new FakeSpotify(0)){var c=client(fake);connect(c);assertThatThrownBy(()->c.playlist("R".repeat(22))).isInstanceOf(SpotifyClient.Failure.class).hasMessage("rate_limited");int count=fake.requests.get();assertThatThrownBy(()->c.playlist("P".repeat(22))).hasMessage("rate_limited");assertThat(fake.requests.get()).isEqualTo(count);}}
+    @Test void rejectsChangedSnapshotsAndOverlargeOrForbiddenPlaylists()throws Exception{try(var fake=new FakeSpotify(0)){var c=client(fake);connect(c);for(var pair:Map.of("C","playlist_changed","L","playlist_too_large","F","access_denied","M","playlist_unavailable").entrySet())assertThatThrownBy(()->c.playlist(pair.getKey().repeat(22))).hasMessage(pair.getValue());}}
+    @Test void expiredAccessTokenRefreshesOnceWithoutLosingPlaylistOrder()throws Exception{try(var fake=new FakeSpotify(0)){var c=client(fake);connect(c);fake.rejectNextRead=true;assertThat(c.playlist("P".repeat(22)).items()).hasSize(4);assertThat(fake.refreshes.get()).isEqualTo(1);}}
+}

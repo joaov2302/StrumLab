@@ -155,6 +155,12 @@ details label { margin-bottom:16px; }
 .book-strumming { border-top:1px solid var(--border); margin-top:16px; padding-top:16px; }
 @media(max-width:759px){.rhythm-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }.rhythm-filters>label:first-child { grid-column:span 2; }.practice-panel,.pattern-list>li { padding:16px; }.rhythm-grid { gap:4px; }.rhythm-grid li { padding:8px 0; gap:4px; }.rhythm-grid strong { font-size:26px; }.rhythm-grid small { font-size:9px; }.practice-controls { gap:16px; }}
 
+.playlist-items { list-style:none; padding:0; display:grid; gap:24px; }
+.playlist-item { min-width:0; }
+.playlist-item-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.playlist-item details { margin:24px 0; }
+.spotify-attribution { display:block; width:132px; padding:16px; }
+.settings-panel code { overflow-wrap:anywhere; }
 .analysis-fields { display:grid; grid-template-columns:1fr 2fr; gap:16px; margin:24px 0; }
 .analysis-events { list-style:none; padding:0; }
 .analysis-events li { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; border-bottom:1px solid var(--border); padding:16px 0; }

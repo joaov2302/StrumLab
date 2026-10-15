@@ -164,3 +164,36 @@ Status D-028–D-031: escolhas técnicas implementadas no escopo local da Fase 5
 Contrato em `docs/analise-audio.md`; licenças em `workers/music-analysis/THIRD_PARTY.md`.
 Nenhuma imagem/binário publicado; distribuição futura exige revisar obrigações das
 dependências, incluindo o build GPL do FFmpeg utilizado. Sem hosting contratado.
+
+## Continuação — 15/10/2026 — Fase 6
+
+Usuário autorizou avançar e escolheu explicitamente **Spotify** como primeiro
+provedor. Cadastrou aplicativo e forneceu Client ID, configurado apenas no `.env`
+ignorado pelo Git. Isso não autoriza publicação, bibliotecas públicas ou Fase 7.
+
+- **D-032 — Spotify:** integração oficial de leitura com Authorization Code/PKCE
+  S256, scopes playlist-read-private/playlist-read-collaborative. Tokens/verifier
+  apenas em memória Java; state vinculado ao navegador, uso único e dez minutos.
+  Alternativa client-credentials não cobre a autorização necessária neste fluxo.
+  Callback local em 127.0.0.1; não há Client Secret nem login público do StrumLab.
+- **D-033 — Importação:** fila persistida no PostgreSQL, worker Java agendado,
+  leitura paginada e snapshot conferido, até 200 itens/20 importações locais.
+  Lease de 180 s e três tentativas; cancelamento invalida publicação tardia.
+  Itens mantêm posição/duplicatas e falhas/pendências independentes. Nenhuma
+  faixa cria música, letra ou análise automaticamente.
+- **D-034 — Revisões e exportação:** vincular, copiar explicitamente ou pular;
+  só conteúdo próprio/autorizado já revisado pode preparar faixa. Livro captura
+  revisões escolhidas em ordem. Omissões/repetições exigem confirmação; criação
+  transacional e idempotente. Metadados Spotify não são usados como conteúdo PDF.
+- **D-035 — Conta e retenção:** hash de conta associado ao workspace, tokens não
+  persistidos. Reconectar mesma conta preserva importações; trocar conta limpa
+  metadados anteriores. Desconectar remove vínculo/importações. Expiração técnica
+  após 30 dias de inatividade; cifras/cancioneiros manuais permanecem. Backups têm
+  retenção externa. Alternativa de tokens persistidos exigiria gestão de segredos.
+- **D-036 — Validação:** simulador Spotify somente no classpath de testes, nunca
+  no JAR de produção ou configurável por host em runtime. QA em banco/volume
+  exclusivos, sem credenciais reais. Validação real exige consentimento OAuth
+  da conta do usuário; não foi declarada como executada.
+
+D-032–D-036 são escolhas técnicas do escopo autorizado; Spotify é a escolha
+explícita do usuário. Fontes oficiais, limites e comandos em `docs/playlists.md`.

@@ -1891,6 +1891,793 @@ paths:
           description: Invalid input
       security:
         - LocalProxyToken: []
+  /api/v1/playlist-imports:
+    get:
+      operationId: listPlaylistImports
+      security:
+        - LocalProxyToken: []
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlaylistSummary'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+    post:
+      operationId: createPlaylistImport
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistCreate'
+      responses:
+        '202':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDetail'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+  /api/v1/playlist-imports/connection:
+    get:
+      operationId: getSpotifyConnection
+      security:
+        - LocalProxyToken: []
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotifyConnection'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+    delete:
+      operationId: disconnectSpotify
+      security:
+        - LocalProxyToken: []
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotifyConnection'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+  /api/v1/playlist-imports/connection/start:
+    post:
+      operationId: startSpotifyConnection
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpotifySession'
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotifyStart'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+  /api/v1/playlist-imports/connection/callback:
+    post:
+      operationId: completeSpotifyConnection
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpotifyCallback'
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotifyConnection'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+  /api/v1/playlist-imports/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getPlaylistImport
+      security:
+        - LocalProxyToken: []
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDetail'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+    patch:
+      operationId: updatePlaylistImport
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistAction'
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDetail'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+    delete:
+      operationId: deletePlaylistImport
+      security:
+        - LocalProxyToken: []
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDeleted'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+  /api/v1/playlist-imports/{id}/items/{itemId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      operationId: updatePlaylistImportItem
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistItemEdit'
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDetail'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+  /api/v1/playlist-imports/{id}/songbooks:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: createPlaylistSongbook
+      security:
+        - LocalProxyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistExport'
+      responses:
+        '200':
+          description: Operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '400':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '403':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '404':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '409':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '413':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '422':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '429':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '500':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
+        '503':
+          description: Operation not completed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/SongProblem'
 components:
   schemas:
     Health:
@@ -2851,6 +3638,256 @@ components:
           format: uuid
         reprocess:
           type: boolean
+      additionalProperties: false
+    SpotifyConnection:
+      type: object
+      properties:
+        configured:
+          type: boolean
+        connected:
+          type: boolean
+        redirectUri:
+          type: string
+      required:
+        - configured
+        - connected
+        - redirectUri
+      additionalProperties: false
+    SpotifyStart:
+      type: object
+      properties:
+        authorizationUrl:
+          type: string
+      required:
+        - authorizationUrl
+      additionalProperties: false
+    SpotifySession:
+      type: object
+      properties:
+        browserSession:
+          type: string
+          format: uuid
+      required:
+        - browserSession
+      additionalProperties: false
+    SpotifyCallback:
+      type: object
+      properties:
+        browserSession:
+          type: string
+        state:
+          type: string
+        code:
+          type: string
+          nullable: true
+        error:
+          type: string
+          nullable: true
+      required:
+        - browserSession
+        - state
+        - code
+        - error
+      additionalProperties: false
+    PlaylistSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        externalId:
+          type: string
+        sourceUrl:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - ready
+            - failed
+            - cancelled
+        attempts:
+          type: integer
+        errorCode:
+          type: string
+          nullable: true
+        version:
+          type: integer
+        updatedAt:
+          type: string
+          format: date-time
+        retryAfter:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - externalId
+        - sourceUrl
+        - title
+        - status
+        - attempts
+        - errorCode
+        - version
+        - updatedAt
+        - retryAfter
+      additionalProperties: false
+    PlaylistItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        position:
+          type: integer
+        externalId:
+          type: string
+          nullable: true
+        title:
+          type: string
+        artist:
+          type: string
+        available:
+          type: boolean
+        selected:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - needs_input
+            - pending
+            - processing
+            - ready
+            - failed
+            - skipped
+            - cancelled
+        errorCode:
+          type: string
+          nullable: true
+        attempts:
+          type: integer
+        songId:
+          type: string
+          format: uuid
+          nullable: true
+        revisionId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - id
+        - position
+        - externalId
+        - title
+        - artist
+        - available
+        - selected
+        - status
+        - errorCode
+        - attempts
+        - songId
+        - revisionId
+      additionalProperties: false
+    PlaylistDetail:
+      type: object
+      properties:
+        playlist:
+          $ref: '#/components/schemas/PlaylistSummary'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaylistItem'
+      required:
+        - playlist
+        - items
+      additionalProperties: false
+    PlaylistCreate:
+      type: object
+      properties:
+        url:
+          type: string
+          maxLength: 500
+      required:
+        - url
+      additionalProperties: false
+    PlaylistAction:
+      type: object
+      properties:
+        version:
+          type: integer
+        action:
+          type: string
+          enum:
+            - cancel
+            - retry
+      required:
+        - version
+        - action
+      additionalProperties: false
+    PlaylistItemEdit:
+      type: object
+      properties:
+        version:
+          type: integer
+        action:
+          type: string
+          enum:
+            - select
+            - link
+            - copy
+            - retry
+            - skip
+            - cancel
+        selected:
+          type: boolean
+        songId:
+          type: string
+          format: uuid
+        revisionId:
+          type: string
+          format: uuid
+      required:
+        - version
+        - action
+      additionalProperties: false
+    PlaylistExport:
+      type: object
+      properties:
+        version:
+          type: integer
+        requestKey:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        itemIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        allowPartial:
+          type: boolean
+        allowDuplicates:
+          type: boolean
+      required:
+        - version
+        - requestKey
+        - title
+        - itemIds
+        - allowPartial
+        - allowDuplicates
+      additionalProperties: false
+    PlaylistDeleted:
+      type: object
+      properties:
+        deleted:
+          type: boolean
+      required:
+        - deleted
       additionalProperties: false
   securitySchemes:
     LocalProxyToken:

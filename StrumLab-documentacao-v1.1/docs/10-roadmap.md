@@ -84,3 +84,17 @@ Comandos/limites em [analise-audio.md](../../docs/analise-audio.md), evidências
 [execucao.md](../../docs/execucao.md). CI preparado; execução remota não verificada.
 Fase 6 não implementada. Próximo gate: playlists por metadados autorizados,
 somente após nova solicitação e revisão das condições dos provedores.
+
+## Continuação — 15/10/2026 — Fase 6
+
+Spotify escolhido pelo usuário. Importação oficial de metadados, OAuth/PKCE,
+fila persistida, seleção/pendências por item, cópia/vínculo de revisões e livro
+parcial com duplicatas explícitas implementados. Gate controlado: 107 testes
+(47 Java, 35 Vitest, sete Python, 18 Playwright), sem skips, lint/tipos/build,
+PostgreSQL exclusivo de QA e inspeção visual desktop/celular.
+Spotify simulado por servidor HTTP somente em testes; conexão/importação da
+conta real ainda depende do consentimento OAuth do usuário. CI preparado e não
+executado remotamente. Fontes, limites e comandos em
+[playlists.md](../../docs/playlists.md); evidências em
+[execucao.md](../../docs/execucao.md). Fase 7 não iniciada e exige definição de
+escopo/autorização própria; não há próximo prompt de implementação automática.

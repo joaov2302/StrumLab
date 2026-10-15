@@ -1,0 +1,28 @@
+import {test,expect} from '@playwright/test';
+import {newContent,type SongDetail} from '../src/lib/songs';
+import type {PlaylistDetail} from '../src/lib/playlists';
+import type {BookDetail} from '../src/lib/songbooks';
+test.describe('Spotify playlist workflow with synthetic provider',()=>{
+ test.skip(process.env.LIVE_PLAYLISTS!=='1','Requires isolated API with test-classpath Spotify fixture');
+ test.setTimeout(90000);
+ test('PKCE connection, ordered metadata, partial selection, duplicate approval, pinned PDF and disconnect',async({page,request,baseURL})=>{
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));const origin=baseURL!,headers={Origin:origin};
+  const content=newContent();content.title=`Cifra propria playlist ${Date.now()}`;content.rightsBasis='own';content.sections[0].lines[0].tokens=[{type:'text',symbol:null,value:'Verso autoral para exportacao parcial.'}];
+  const created=await request.post('/api/songs',{headers,data:content}).then(r=>r.json()) as SongDetail;
+  const song=await request.post(`/api/songs/${created.song.id}/revisions`,{headers,data:{content,baseRevisionId:created.baseRevisionId,draftVersion:created.song.draftVersion}}).then(r=>r.json()) as SongDetail;
+  await request.delete('/api/playlists/connection',{headers,data:{}});await page.goto('/importacoes');await page.getByRole('button',{name:'Conectar Spotify',exact:true}).click();await expect(page.getByText('Conta conectada. Você pode importar os metadados.')).toBeVisible();
+  await page.getByRole('textbox',{name:'URL da playlist Spotify'}).fill('https://open.spotify.com/playlist/'+'P'.repeat(22));await page.getByRole('button',{name:'Importar playlist',exact:true}).click();await expect(page).toHaveURL(/\/importacoes\/[0-9a-f-]{36}$/);const id=page.url().split('/').at(-1)!;
+  await expect(page.locator('.playlist-item')).toHaveCount(4);const detail=()=>request.get(`/api/playlists/${id}`).then(r=>r.json()) as Promise<PlaylistDetail>;
+  const imported=await detail();expect(imported.items.map(i=>i.position)).toEqual([0,1,2,3]);expect(imported.items[0].externalId).toBe(imported.items[2].externalId);expect(imported.items[1].status).toBe('failed');expect(imported.items[0].status).toBe('needs_input');
+  for(const n of [1,3]){const row=page.locator('.playlist-item').nth(n-1);await row.getByText(`Vincular revisão da biblioteca · faixa ${n}`,{exact:true}).click();await row.getByRole('searchbox',{name:`Buscar cifra para faixa ${n}`}).fill(content.title);await row.getByRole('button',{name:'Buscar na biblioteca',exact:true}).click();await row.getByRole('combobox',{name:`Cifra da faixa ${n}`,exact:true}).selectOption(song.song.id);await row.getByRole('button',{name:`Vincular e preparar faixa ${n}`,exact:true}).click();await expect(row.locator('.badge')).toHaveText('Preparada',{timeout:15000});}
+  await page.getByLabel('Selecionar faixa 4',{exact:true}).check();await expect(page.getByRole('button',{name:'Criar cancioneiro com 2 preparadas',exact:true})).toBeDisabled();await page.getByLabel('Confirmo criar somente com preparadas',{exact:false}).check();await page.getByRole('button',{name:'Criar cancioneiro com 2 preparadas',exact:true}).click();await expect(page.getByRole('main').getByRole('alert')).toContainText('mesma música aparece mais de uma vez');await page.getByLabel('Permitir repetir explicitamente',{exact:false}).check();await page.getByRole('textbox',{name:'Título do cancioneiro',exact:true}).fill('Selecao manual autorizada');await page.getByRole('button',{name:'Criar cancioneiro com 2 preparadas',exact:true}).click();await expect(page).toHaveURL(/\/cancioneiros\/[0-9a-f-]{36}$/);const bookId=page.url().split('/').at(-1)!;
+  const book=await request.get(`/api/songbooks/${bookId}`).then(r=>r.json()) as BookDetail;expect(book.items.map(i=>i.revisionId)).toEqual([song.song.currentRevisionId,song.song.currentRevisionId]);expect(book.items.every(i=>i.content.title===content.title)).toBe(true);
+  await page.getByRole('button',{name:'Gerar prévia',exact:true}).click();await expect(page).toHaveURL(/\/previa\?export=/);await expect(page.getByRole('link',{name:'Exportar PDF',exact:true})).toBeVisible();const pdfHref=await page.getByRole('link',{name:'Exportar PDF',exact:true}).getAttribute('href');const pdf=await request.get(pdfHref!);expect(pdf.ok()).toBe(true);expect((await pdf.body()).subarray(0,4).toString()).toBe('%PDF');
+  await page.goto('/importacoes');page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Desconectar e excluir importações',exact:true}).click();await expect(page.getByText('Conta desconectada',{exact:true})).toBeVisible();expect(await request.get('/api/playlists').then(r=>r.json())).toEqual([]);expect((await request.get(`/api/songbooks/${bookId}`)).ok()).toBe(true);expect((await request.get(`/api/songs/${song.song.id}`).then(r=>r.json()) as SongDetail).revisions).toHaveLength(1);expect(errors).toEqual([]);
+ });
+ test('callback state and cross-site writes are rejected without exposing tokens',async({request,baseURL})=>{
+  const denied=await request.post('/api/playlists/connection/start',{headers:{Origin:'https://untrusted.example'},data:{}});expect(denied.status()).toBe(403);
+  const invalid=await request.get('/api/playlists/connection/callback?state=invalid&code=fake',{maxRedirects:0});expect(invalid.status()).toBe(303);expect(invalid.headers().location).toBe(`${baseURL}/importacoes?connection=failed`);expect(invalid.headers()['set-cookie']).toContain('Max-Age=0');
+  const status=await request.get('/api/playlists/connection').then(r=>r.json());expect(Object.keys(status).sort()).toEqual(['configured','connected','redirectUri']);
+ });
+});

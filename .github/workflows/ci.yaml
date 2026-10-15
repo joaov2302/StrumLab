@@ -22,6 +22,8 @@ jobs:
       POSTGRES_PASSWORD: ci-disposable-only
       LIVE_API: '1'
       LIVE_ANALYSIS: '1'
+      LIVE_PLAYLISTS: '1'
+      SPOTIFY_REDIRECT_URI: http://127.0.0.1:3000/api/playlists/connection/callback
       LOCAL_API_TOKEN: ci-local-api-token-disposable-000001
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +48,8 @@ jobs:
         run: docker run -d --name strumlab-analysis-ci --network host --read-only --tmpfs /tmp:rw,noexec,nosuid,size=256m --cap-drop ALL --security-opt no-new-privileges --memory 2g --cpus 2 --pids-limit 64 -e PGHOST=127.0.0.1 -e POSTGRES_DB=strumlab_test -e POSTGRES_USER -e POSTGRES_PASSWORD strumlab-analysis:ci
       - name: Start API
         run: |
-          java -jar apps/api/target/api-0.0.1-SNAPSHOT.jar > /tmp/strumlab-api.log 2>&1 &
+          bash apps/api/mvnw -B -ntp -f apps/api/pom.xml dependency:build-classpath -Dmdep.outputFile=/tmp/strumlab-test-classpath -DincludeScope=test
+          java -cp "apps/api/target/test-classes:apps/api/target/classes:$(cat /tmp/strumlab-test-classpath)" br.com.strumlab.playlists.SpotifyE2EServer > /tmp/strumlab-api.log 2>&1 &
           for attempt in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:8080/api/v1/health; then exit 0; fi
             sleep 2
