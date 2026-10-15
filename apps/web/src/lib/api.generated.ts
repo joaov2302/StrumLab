@@ -680,6 +680,11 @@ export interface components {
             lineSpacing: number;
             /** @enum {integer} */
             columns: 1 | 2;
+            /**
+             * @default portrait
+             * @enum {string}
+             */
+            orientation: "portrait" | "landscape";
         };
         BookConfig: {
             title: string;
@@ -714,6 +719,8 @@ export interface components {
             latestRevisionId: string | null;
             songArchived: boolean;
             strummingSnapshot?: components["schemas"]["StrummingSnapshot"] | null;
+            /** @default  */
+            category: string;
         };
         BookPage: {
             items: components["schemas"]["BookSummary"][];
@@ -760,6 +767,8 @@ export interface components {
             content: components["schemas"]["SongContent"];
             notes: string;
             strummingSnapshot?: components["schemas"]["StrummingSnapshot"] | null;
+            /** @default  */
+            category: string;
         };
         BookManifest: {
             /** @enum {integer} */
@@ -963,7 +972,7 @@ export interface components {
         PlaylistItemEdit: {
             version: number;
             /** @enum {string} */
-            action: "select" | "link" | "copy" | "retry" | "skip" | "cancel";
+            action: "prepare" | "select" | "link" | "copy" | "retry" | "skip" | "cancel";
             selected?: boolean;
             /** Format: uuid */
             songId?: string;
@@ -2475,6 +2484,7 @@ export interface operations {
                     /** Format: uuid */
                     revisionId: string;
                     notes: string;
+                    category?: string;
                 };
             };
         };

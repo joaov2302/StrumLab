@@ -124,3 +124,17 @@ docker compose -f infra/compose.test.yaml stop
 ```
 
 Volumes permanecem; não é necessário apagar banco nem volume pessoal.
+
+## Gravação pelo navegador
+
+Além de MP3/WAV, o formulário permite gravar o instrumento pelo microfone por até
+dois minutos. Exige permissão do navegador em contexto seguro/loopback e suporte
+a MediaRecorder/AudioContext. Não captura Spotify. O formato nativo é decodificado
+no próprio navegador e convertido em WAV mono PCM16, com prévia e descarte.
+Nenhum envio ocorre antes da confirmação de autorização. Falta de suporte ou
+permissão oferece upload de arquivo. Ao sair, o microfone é liberado.
+
+A gravação passa pelo mesmo pipeline privado. Testes usam microfone sintético do
+Chromium para conferir WAV, prévia, descarte e recusa de permissão, sem alegar
+validação acústica com um microfone físico. A precisão musical permanece
+experimental: BPM/tom/tríades, sem confiança calibrada, letra ou batida exata.

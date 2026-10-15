@@ -1100,6 +1100,9 @@ paths:
                   format: uuid
                 notes:
                   type: string
+                category:
+                  type: string
+                  maxLength: 80
               additionalProperties: false
       responses:
         '200':
@@ -3005,6 +3008,12 @@ components:
           enum:
             - 1
             - 2
+        orientation:
+          type: string
+          enum:
+            - portrait
+            - landscape
+          default: portrait
       additionalProperties: false
     BookConfig:
       type: object
@@ -3098,6 +3107,10 @@ components:
           allOf:
             - $ref: '#/components/schemas/StrummingSnapshot'
           nullable: true
+        category:
+          type: string
+          maxLength: 80
+          default: ''
       additionalProperties: false
     BookPage:
       type: object
@@ -3230,6 +3243,10 @@ components:
           allOf:
             - $ref: '#/components/schemas/StrummingSnapshot'
           nullable: true
+        category:
+          type: string
+          maxLength: 80
+          default: ''
       additionalProperties: false
     BookManifest:
       type: object
@@ -3835,6 +3852,7 @@ components:
         action:
           type: string
           enum:
+            - prepare
             - select
             - link
             - copy

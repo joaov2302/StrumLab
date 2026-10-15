@@ -11,13 +11,15 @@ test.describe('Songbook PDF workflow',()=>{
    const origin=baseURL!;const suffix=Date.now();const a=await song(request,`Autoral A ${suffix}`,origin),b=await song(request,`Autoral B ${suffix}`,origin);
    await page.goto('/cancioneiros');await page.getByRole('button',{name:'Criar cancioneiro',exact:true}).click();await expect(page).toHaveURL(/\/cancioneiros\/[a-f0-9-]{36}$/);
    const montage=page.url(),id=montage.split('/').at(-1)!;
-   await page.getByLabel('Título do cancioneiro',{exact:true}).fill(`Livro autoral ${suffix}`);await page.getByRole('button',{name:'Salvar capa e layout'}).click();await expect(page.getByRole('status')).toHaveText('Montagem salva');
+   await page.getByRole('combobox',{name:'Orientação',exact:true}).selectOption('landscape');await page.getByLabel('Título do cancioneiro',{exact:true}).fill(`Livro autoral ${suffix}`);await page.getByRole('button',{name:'Salvar capa e layout'}).click();await expect(page.getByRole('status')).toHaveText('Montagem salva');
    for(const value of [a,b]){await page.getByLabel('Buscar música para adicionar',{exact:true}).fill(value.draft.title);await page.getByRole('button',{name:`Selecionar ${value.draft.title}`,exact:true}).click();await page.getByRole('button',{name:'Adicionar revisão ao livro'}).click();await expect(page.getByRole('status')).toHaveText('Montagem salva');}
    await page.getByRole('button',{name:'Duplicar item 1',exact:true}).click();await expect(page.locator('.book-item-list>li')).toHaveCount(3);
    await page.getByRole('button',{name:'Remover item 3',exact:true}).click();await expect(page.locator('.book-item-list>li')).toHaveCount(2);
    await page.getByRole('button',{name:'Subir item 2',exact:true}).click();await expect(page.locator('.book-item-list h3').first()).toHaveText(b.draft.title);
+   await page.getByLabel('Categoria do item 1',{exact:true}).fill('Ensaio');await page.getByRole('button',{name:'Salvar nota 1',exact:true}).click();await expect(page.getByRole('status')).toHaveText('Montagem salva');
    await page.getByRole('button',{name:'Gerar prévia',exact:true}).click();await expect(page).toHaveURL(/\/previa\?export=/);const preview=page.url(),exportId=new URL(preview).searchParams.get('export')!;
    await expect(page.getByRole('status')).toHaveText('Página 1 de 4');await expect(page.getByRole('link',{name:'Exportar PDF',exact:true})).toBeVisible();
+   await page.getByText('Miniaturas das páginas',{exact:true}).click();await page.getByRole('button',{name:'Abrir miniatura da página 3',exact:true}).click();await expect(page.getByRole('status')).toHaveText('Página 3 de 4');await page.getByRole('combobox',{name:'Página do PDF'}).selectOption('1');await expect(page.getByRole('status')).toHaveText('Página 1 de 4');
    const metadata=await request.get(`/api/songbooks/${id}/exports/${exportId}`).then(r=>r.json()) as BookExport;expect(metadata.pageIndex.map(i=>i.title)).toEqual([b.draft.title,a.draft.title]);
    const downloadEvent=page.waitForEvent('download');await page.getByRole('link',{name:'Exportar PDF',exact:true}).click();const download=await downloadEvent;await download.saveAs('../../.cache/book-flow.pdf');
    const bytes=readFileSync('../../.cache/book-flow.pdf');expect(bytes.subarray(0,5).toString()).toBe('%PDF-');expect(createHash('sha256').update(bytes).digest('hex')).toBe(metadata.pdfSha256);

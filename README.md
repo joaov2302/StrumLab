@@ -7,7 +7,14 @@ e prática Pop/Folk com samples licenciados, metrônomo e vínculo à cifra/PDF.
 Análise privada de MP3/WAV com sugestões de BPM/tom/acordes e aprovação seletiva.
 **Fase 6 implementada:** playlists Spotify por API oficial, OAuth/PKCE, seleção,
 pendências por faixa e criação parcial de cancioneiros. Validada com Spotify
-sintético e API/PostgreSQL reais; autorização da conta Spotify real ainda pendente.
+sintético e API/PostgreSQL reais; o usuário também relatou importação de metadados
+com sua conta real. A integração não fornece o arquivo de áudio da faixa.
+
+Complementos locais: gravação pelo microfone, fluxo guiado por faixa até revisão
+de acordes, diagramas/simplificação, preferências persistentes, recuperação de
+edição e cópias explícitas para leitura offline. Cancioneiros têm categorias,
+paisagem opcional e miniaturas. Veja [uso offline](docs/uso-offline.md) e o
+[fluxo de playlist e áudio](docs/playlists.md). Batida exata/letra não são geradas.
 
 ## Executar localmente
 

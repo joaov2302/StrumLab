@@ -476,3 +476,68 @@ tem requisitos do Spotify, documentados com fontes em [playlists.md](playlists.m
 Sem commit, push, deploy ou publicação de biblioteca. Sem validação remota do CI,
 Firefox/Safari/leitor de tela integral. O protótipo continua restrito ao loopback;
 não é autenticação pública. Nenhuma implementação da Fase 7 foi iniciada.
+
+## 15/10/2026 — Complementos autorizados e correção do fluxo de playlist
+
+O usuário solicitou implementar pendências e explicou esperar acordes/batida da
+música importada. A captura comprova metadados recebidos, com `needs_input` por
+falta de fonte; não era evidência de análise ou obtenção de áudio pelo Spotify.
+Autorização e limites registrados em D-037–D-041; sem avanço à Fase 7.
+
+### Entrega
+
+- Faixa oferece criar explicitamente rascunho manual, enviar/gravar áudio,
+  informar título/direitos e preparar a revisão aprovada. Não copia metadados
+  como conteúdo, não cria música silenciosamente e não altera cifras anteriores.
+- `needs_input` deixa de oferecer repetição inútil. API também recusa retry sem
+  revisão/fonte. Rascunho por faixa é protegido por versão/lock, sem duplicação
+  ao repetir a ação, e sobrevive à desconexão como criação manual do usuário.
+- Microfone: até dois minutos, WAV mono PCM16 gerado no navegador, prévia,
+  descarte, confirmação de envio separada, liberação ao sair, erro de permissão.
+- Diagramas EADGBE de posições cadastradas; simplificação com prévia, confirmação
+  e desfazer, sem sobrescrever revisões. Posições desconhecidas são explicitadas.
+- Tamanho/contraste/movimento persistentes; recuperação local do buffer inclusive
+  com sintaxe incompleta, sem substituir a base concorrente após conflito/fechar.
+- Cópias offline explícitas com data, instalação via manifesto/ícones e limpeza
+  dos dados do dispositivo. API/OAuth/áudio/Spotify não entram no cache.
+- Categoria por item até 80 caracteres, paisagem A4 opcional e miniaturas
+  paginadas dos mesmos bytes. V8 aditiva e renderizador v3; históricos preservados.
+
+### Validação final
+
+| Verificação | Evidência |
+|---|---|
+| `test-api.ps1 -Isolated` | 48 aprovados: 22 unitários + 26 integrações, PostgreSQL 5434, V1–V8 |
+| `npm.cmd run test --workspace apps/web` | 41 aprovados, incluindo WAV, simplificação e PDF paisagem/índice |
+| `test-worker.ps1` | Sete aprovados, banco de QA, sem skips |
+| Playwright, flags LIVE_API/ANALYSIS/PLAYLISTS/EXTERNAL_WEB | 22 aprovados em 43,1 s, sem skips, build de produção |
+| Nova jornada | Spotify sintético → criar cifra → arquivo de violão CC0 → worker → aprovar acordes → título/direitos manuais → preparar faixa |
+| Microfone | Dispositivo sintético Chromium → gravação → WAV/prévia/descarte; permissão recusada tratada |
+| Recuperação | Fechamento/reabertura; conflito com versão mais nova, repetido em duas reaberturas, sem sobrescrever banco |
+| Offline | Rede desligada após guardar cifra; listagem, leitura pela cópia e limpeza local |
+| PDF | A4 paisagem, quatro páginas, categoria/Unicode, índice físico, limites de texto e inspeção visual |
+| Qualidade | lint, typecheck, build aprovados; UI 360/1440 sem overflow/erros JS, capturas inspecionadas |
+
+Total: **118 testes automatizados**. Evidências locais em `.cache/completion/`,
+relatórios Maven e Playwright. Primeira execução teve seletores de testes
+incompatíveis com nomes acessíveis de selects/alert do roteador; corrigidos.
+Falhas intermediárias não foram contadas como aprovações. Revisão de React e
+verificação visual de PDF aplicadas aos novos componentes.
+
+### Ambiente pessoal e limites
+
+Backup privado antes da V8: `.cache/runtime/strumlab-before-v8-20261015.dump`,
+catálogo pg_restore conferido; SHA-256
+`86D2742B6E4EC1FC20886CFEE5912B47A7FDFF2B1E9261364317CD063A8873DE`.
+V8 aplicada no banco pessoal, comparados contagem/hashes de revisões e bytes de
+PDF antes/depois: preservados. Nenhuma fixture de QA inserida no banco pessoal.
+Frontend/API reiniciados em 3000/8080, health/database `up`; Postgres/worker pessoais
+mantidos. Tokens Spotify em memória exigem reconexão após reiniciar a API.
+
+Sugestões continuam sendo BPM/tom/tríades experimentais, com revisão humana.
+**A geração automática de letra e da batida exata solicitada não está entregue**:
+Spotify não fornece fonte para isso neste fluxo; não há modelo rítmico validado
+ou confiança calibrada. A batida da biblioteca é escolhida manualmente.
+Offline cobre cifras escolhidas/recuperação, não áudio/PDFs ou todo o catálogo.
+Instalação em Safari/iOS/Firefox e microfone físico não foram validados. CI remoto,
+deploy, contas públicas e compartilhamento seguem fora deste encerramento local.

@@ -11,6 +11,15 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class BooksIT {
+    @Test void categoriesAndLandscapeArePinnedWithoutChangingOtherBooksOrSongs(){
+        var song=song("Categoria autoral");var base=config("Paisagem");var config=new Config(base.title(),base.subtitle(),base.organizer(),base.cover(),new Layout("serif",11,15,1.1,2,"landscape"));
+        var book=add(books.create(config),song,false);var other=add(books.create(config("Outro livro")),song,false);var item=book.items().getFirst();
+        book=books.updateItem(book.book().id(),book.book().version(),item.id(),item.revisionId(),"Nota","Celebração");
+        var claim=books.begin(book.book().id(),book.book().version());assertThat(claim.manifest().layout().orientation()).isEqualTo("landscape");assertThat(claim.manifest().items().getFirst().category()).isEqualTo("Celebração");
+        var updated=books.updateItem(book.book().id(),book.book().version(),item.id(),item.revisionId(),"Outra nota");assertThat(updated.items().getFirst().category()).isEqualTo("Celebração");assertThat(books.detail(other.book().id()).items().getFirst().category()).isEmpty();assertThat(songs.detail(song.song().id()).draft()).isEqualTo(song.draft());
+        assertThatThrownBy(()->books.updateItem(updated.book().id(),updated.book().version(),item.id(),item.revisionId(),"","x".repeat(81))).isInstanceOf(SongProblem.class);
+        assertThatThrownBy(()->books.create(new Config("Inválido","","",base.cover(),new Layout("serif",11,15,1.1,1,"sideways")))).isInstanceOf(SongProblem.class);
+    }
     @Autowired BookService books;@Autowired SongService songs;@Autowired JdbcTemplate jdbc;
     Config config(String title){return new Config(title,"Subtítulo autoral","Organizador fictício",new Cover(true,"","unspecified"),new Layout("serif",11,15,1.1,1));}
     SongContent content(String title){return new SongContent(1,title,"Autor fictício","G",90,"4/4",0,"manual","Fixture sintética","own",List.of(new SongContent.Section(UUID.randomUUID().toString(),"verse","Verso",List.of(new SongContent.Line(UUID.randomUUID().toString(),List.of(new SongContent.Token("chord","G/B",null),new SongContent.Token("text",null,"ação e coração")))))));}

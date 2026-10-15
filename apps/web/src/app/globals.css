@@ -168,3 +168,8 @@ details label { margin-bottom:16px; }
 .analysis-assets audio { width:100%; max-width:600px; margin:16px 0; }
 .analysis-review ul { padding-left:24px; }
 @media(max-width:759px){.analysis-fields { grid-template-columns:1fr; }.analysis-events li { grid-template-columns:repeat(2,minmax(0,1fr)); }.analysis-assets .settings-panel { padding:16px; }}
+
+.chord-diagrams{display:flex;flex-wrap:wrap;gap:20px}.chord-diagrams figure{margin:16px 0;max-width:140px}.chord-diagrams figcaption{font-weight:700;text-align:center}
+html[data-contrast=high]{--muted:#25362a;--border:#405747;--primary:#123921}html[data-contrast=high] .badge{color:#10291a;border:1px solid currentColor}html[data-motion=reduce] *,html[data-motion=reduce] *::before,html[data-motion=reduce] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+
+.pdf-thumbnails{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.pdf-thumbnails button{display:flex;flex-direction:column;gap:8px;align-items:center}.pdf-thumbnails button[aria-pressed=true]{outline:3px solid var(--primary)}

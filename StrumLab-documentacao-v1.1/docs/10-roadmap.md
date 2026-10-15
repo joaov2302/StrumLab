@@ -98,3 +98,14 @@ executado remotamente. Fontes, limites e comandos em
 [playlists.md](../../docs/playlists.md); evidências em
 [execucao.md](../../docs/execucao.md). Fase 7 não iniciada e exige definição de
 escopo/autorização própria; não há próximo prompt de implementação automática.
+
+## Complementação das fases existentes — 15/10/2026
+
+Pedido de implementar pendências e corrigir playlist executado conforme D-037–D-041:
+fonte de áudio por faixa, microfone, diagramas/simplificação, preferências,
+recuperação, cópias offline e categorias/paisagem/miniaturas. Não é avanço à Fase 7.
+Validação local: 118 testes (48 Java, 41 Vitest, sete Python, 22 Playwright), sem
+skips; lint, tipos, build e inspeção PDF/UI. Precisão musical permanece
+experimental; batida exata, compasso e confiança calibrada continuam sem modelo
+validado/dataset representativo. Letra não é gerada nem obtida do Spotify.
+Evidências e limites em [execucao.md](../../docs/execucao.md).

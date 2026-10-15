@@ -53,3 +53,11 @@ Favoritos, templates editáveis, índices por categoria, rodapés personalizados
 
 ## Complemento v1.1
 A4 retrato é a proposta de produto, diferente da referência paisagem. Não ativar categorias/paisagem sem validar extensão. O manifesto também deve preservar a batida e personalizações usadas por item na Fase 4; ver docs/15-contratos-ux-dados.md.
+
+### Extensão autorizada em 15/10/2026
+
+Pedido explícito de implementar as pendências aprovou categorias, paisagem e
+miniaturas (D-037/D-041). Categoria opcional por item, até 80 caracteres, é
+preservada no manifesto e impressa na página/índice, mantendo a ordem manual.
+Paisagem A4 opcional vale para novas prévias; retrato é o padrão compatível.
+Miniaturas paginadas usam o PDF persistido. PDFs históricos permanecem intactos.

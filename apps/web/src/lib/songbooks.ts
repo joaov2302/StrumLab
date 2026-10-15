@@ -11,4 +11,4 @@ export async function bookRequest<T>(path='',method='GET',data?:unknown,signal?:
   catch(exception){if(signal?.aborted)throw exception;throw new BookError(503,'Não foi possível acessar os cancioneiros. Tente novamente.');}
   const value=await response.json();if(!response.ok)throw new BookError(response.status,value.detail??'Não foi possível concluir a operação.');return value as T;
 }
-export const newBook=():BookConfig=>({title:'Novo cancioneiro',subtitle:'',organizer:'',cover:{enabled:true,imageData:'',imageRights:'unspecified'},layout:{font:'serif',fontSize:11,marginMm:15,lineSpacing:1.1,columns:1}});
+export const newBook=():BookConfig=>({title:'Novo cancioneiro',subtitle:'',organizer:'',cover:{enabled:true,imageData:'',imageRights:'unspecified'},layout:{orientation:'portrait',font:'serif',fontSize:11,marginMm:15,lineSpacing:1.1,columns:1}});

@@ -1,0 +1,6 @@
+'use client';
+import {useEffect,useState} from 'react';
+import type {SongDetail} from '@/lib/songs';
+import {saveSongOffline} from '@/lib/offline';
+export function OfflineInit(){useEffect(()=>{if('serviceWorker'in navigator)void navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(()=>{});},[]);return null;}
+export function OfflineSave({detail}:{detail:SongDetail}){const[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState('');async function save(){setBusy(true);setError('');try{await saveSongOffline(detail);setMessage('Cópia guardada neste navegador. Para abrir sem os serviços, use Cifras offline. Salve novamente após revisar a música.');}catch(e){setError((e as Error).message);}finally{setBusy(false);}}return <section className="settings-panel"><h2>Leitura offline</h2><p>Guarda esta cifra e suas revisões neste dispositivo. O conteúdo continua acessível a quem usar este navegador. Áudios e dados do Spotify não são guardados no cache offline.</p><button className="secondary" disabled={busy} onClick={()=>void save()}>{busy?'Guardando cifra…':'Guardar cifra para uso offline'}</button> <a href="/offline.html">Cifras offline e limpeza de dados locais</a>{message?<p role="status">{message}</p>:null}{error?<p role="alert">{error}</p>:null}</section>;}

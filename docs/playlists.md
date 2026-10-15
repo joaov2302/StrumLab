@@ -159,3 +159,27 @@ o gate da fase. O CI usa o mesmo servidor sintético junto do PostgreSQL/worker
 reais. Execução remota e integração com uma conta Spotify real são verificações
 distintas, ainda pendentes. Ao terminar, Ctrl+C na API/web e
 `docker compose -f infra/compose.test.yaml stop`; volumes são preservados.
+
+## Complemento do fluxo — 15/10/2026
+
+`needs_input` significa metadados importados e falta de fonte, não falha de OAuth.
+A captura do usuário mostra uma importação real de metadados; isso não valida
+download de áudio nem análise real. O QA automatizado continua usando provedor
+sintético e fontes de áudio de teste autorizadas.
+
+1. Na faixa, escolha **Criar cifra para analisar**. Isso cria explicitamente um
+   rascunho independente `Nova cifra`, sem copiar metadados para conteúdo musical.
+2. Abra **Enviar ou gravar áudio e gerar sugestões**. Envie MP3/WAV autorizado ou
+   grave seu instrumento. A gravação é convertida localmente em WAV mono PCM16;
+   até dois minutos, com prévia/descarte e confirmação separada antes do upload.
+3. Revise BPM, tom e eventos de acordes na análise e aplique somente sua seleção.
+4. No editor, informe título e base de direitos, depois **Salvar revisão**.
+5. Volte à faixa e escolha **Preparar com revisão aprovada**. A revisão fica
+   fixada; alterações posteriores da cifra não são aplicadas ao item sozinhas.
+
+Repetir uma faixa sem fonte agora retorna conflito explicativo; o botão não é
+exibido em `needs_input`. Não há geração de letra, alinhamento à letra ou
+reconhecimento exato de batida. Para prática, a biblioteca permite escolher uma
+batida manualmente. O teste novo percorre importação → rascunho → upload → worker
+→ aprovação de acordes → declaração manual → faixa preparada. São três cenários
+Spotify, além dos testes de gravação/offline; habilitar LIVE_PLAYLISTS no QA.

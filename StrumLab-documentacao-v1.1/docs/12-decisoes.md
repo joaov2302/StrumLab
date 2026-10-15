@@ -197,3 +197,31 @@ ignorado pelo Git. Isso não autoriza publicação, bibliotecas públicas ou Fas
 
 D-032–D-036 são escolhas técnicas do escopo autorizado; Spotify é a escolha
 explícita do usuário. Fontes oficiais, limites e comandos em `docs/playlists.md`.
+
+## Complementação autorizada — 15/10/2026
+
+- **D-037 — Escopo:** o usuário pediu implementar as pendências apontadas e
+  corrigir o fluxo da playlist. Autorização abrange complementos das fases já
+  existentes: microfone, diagramas/simplificação, preferências, recuperação,
+  cópias offline e extensão de cancioneiros para categorias/paisagem/miniaturas.
+  Não autoriza compartilhamento público, multiusuário, deploy ou fases futuras.
+- **D-038 — Faixa e análise:** importar metadados continua sem gerar cifras
+  silenciosamente. Ação explícita cria rascunho manual independente, sem copiar
+  título/artista/letra Spotify. Usuário envia/grava áudio autorizado, revisa as
+  sugestões, informa título/direitos e vincula a revisão aprovada. Repetição sem
+  fonte é recusada. Não há extração de letra ou reconhecimento exato de batida.
+- **D-039 — Dados no dispositivo:** preferências e recuperação em localStorage;
+  cópia completa da cifra somente após ação Guardar para uso offline. Service
+  worker guarda arquivos públicos e páginas solicitadas; nunca endpoints API,
+  OAuth, tokens ou bytes de áudio. Limpeza explícita em `/offline.html` preserva
+  o banco. Recuperação guarda a versão original inclusive após conflito/reabertura.
+  Quota/bloqueio de armazenamento são erros visíveis. Cópias podem ficar antigas.
+- **D-040 — Complementos musicais:** diagramas EADGBE de posições cadastradas,
+  sem inferir posições desconhecidas. Simplificação retira extensões com prévia,
+  confirmação e possibilidade de desfazer; preserva baixos e acordes alterados,
+  suspensos, aumentados e diminutos. Não altera revisões já salvas.
+- **D-041 — Cancioneiros:** paisagem opcional; categoria textual por item aparece
+  na página e no índice, sem reordenar repertório. V8 adiciona coluna com padrão
+  vazio; layouts antigos usam retrato. Renderizador `pdfkit-a4-v3` somente para
+  novas exportações, mantendo bytes/manifestos históricos. Miniaturas dos mesmos
+  bytes, carregadas sob demanda em grupos de até 12 páginas.

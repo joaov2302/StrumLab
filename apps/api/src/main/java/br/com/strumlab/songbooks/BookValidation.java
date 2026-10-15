@@ -13,7 +13,7 @@ public final class BookValidation {
         require(c!=null&&c.title()!=null&&!c.title().isBlank()&&c.title().length()<=200,"Título do cancioneiro inválido.");
         require(c.subtitle()!=null&&c.subtitle().length()<=300&&c.organizer()!=null&&c.organizer().length()<=200,"Texto de capa inválido.");
         require(c.layout()!=null&&c.cover()!=null,"Informe a capa e o layout.");
-        var l=c.layout();require(Set.of("sans","serif").contains(l.font()==null?"":l.font())&&l.fontSize()>=9&&l.fontSize()<=16&&l.marginMm()>=10&&l.marginMm()<=25&&l.lineSpacing()>=1&&l.lineSpacing()<=1.6&&(l.columns()==1||l.columns()==2),"Layout A4 inválido.");
+        var l=c.layout();require(Set.of("portrait","landscape").contains(l.orientation()),"Orientação inválida.");require(Set.of("sans","serif").contains(l.font()==null?"":l.font())&&l.fontSize()>=9&&l.fontSize()<=16&&l.marginMm()>=10&&l.marginMm()<=25&&l.lineSpacing()>=1&&l.lineSpacing()<=1.6&&(l.columns()==1||l.columns()==2),"Layout A4 inválido.");
         var cover=c.cover();require(cover.imageData()!=null&&Set.of("unspecified","own","permission").contains(cover.imageRights()==null?"":cover.imageRights()),"Configuração de imagem inválida.");
         if(cover.imageData().isEmpty())return;
         require(!cover.imageRights().equals("unspecified"),"Declare autoria ou permissão para a imagem de capa.");

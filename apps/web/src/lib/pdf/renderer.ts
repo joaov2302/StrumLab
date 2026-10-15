@@ -4,10 +4,10 @@ import path from 'node:path';
 import type { SongContent } from '../songs';
 import {counts,symbol,type StrummingSnapshot} from '../strumming';
 
-export const RENDERER_VERSION='pdfkit-a4-v2';
-export type BookLayout={font:'sans'|'serif';fontSize:number;marginMm:number;lineSpacing:number;columns:1|2};
+export const RENDERER_VERSION='pdfkit-a4-v3';
+export type BookLayout={font:'sans'|'serif';fontSize:number;marginMm:number;lineSpacing:number;columns:1|2;orientation?:'portrait'|'landscape'};
 export type BookCover={enabled:boolean;imageData:string;imageRights:'unspecified'|'own'|'permission'};
-export type ManifestItem={itemId:string;songId:string;revisionId:string;revisionNo:number;content:SongContent;notes:string;strummingSnapshot?:StrummingSnapshot|null};
+export type ManifestItem={itemId:string;songId:string;revisionId:string;revisionNo:number;content:SongContent;notes:string;category?:string;strummingSnapshot?:StrummingSnapshot|null};
 export type BookManifest={schemaVersion:1;rendererVersion:string;songbookId:string;bookVersion:number;title:string;subtitle:string;organizer:string;cover:BookCover;layout:BookLayout;items:ManifestItem[]};
 type Font='sans'|'serif'|'symbols'|'math'|'emoji';
 export type DrawText={kind:'text';x:number;y:number;text:string;size:number;font:Font;color:string};
@@ -15,7 +15,7 @@ type DrawImage={kind:'image';x:number;y:number;width:number;height:number;data:s
 export type PlannedPage={kind:'cover'|'index'|'song';elements:(DrawText|DrawImage)[]};
 export type PageIndex={itemId:string;title:string;page:number;revisionNo:number};
 export type BookPlan={pages:PlannedPage[];index:PageIndex[]};
-const WIDTH=595.2756,HEIGHT=841.8898;
+
 const fonts={sans:'NotoSans.ttf',serif:'NotoSerif.ttf',symbols:'NotoSymbols.ttf',math:'NotoMath.ttf',emoji:'NotoEmoji.ttf'};
 const features:PDFKit.Mixins.OpenTypeFeatures[]=[];
 const fontDirectory=()=>path.resolve(process.cwd(),'../../assets/fonts');
@@ -77,10 +77,11 @@ function musicRows(line:SongContent['sections'][number]['lines'][number],width:n
 function validateManifest(manifest:BookManifest){
   const l=manifest.layout;
   if(manifest.rendererVersion!==RENDERER_VERSION||manifest.schemaVersion!==1||!manifest.items.length||manifest.items.length>200)throw new Error('Manifesto vazio, inválido ou incompatível com o renderizador.');
+  if(l.orientation!==undefined&&!['portrait','landscape'].includes(l.orientation))throw new Error('Orientação inválida.');
   if(!['sans','serif'].includes(l.font)||![1,2].includes(l.columns)||l.fontSize<9||l.fontSize>16||l.marginMm<10||l.marginMm>25||l.lineSpacing<1||l.lineSpacing>1.6)throw new Error('Configuração de página inválida.');
 }
 export function planBook(manifest:BookManifest):BookPlan {
-  validateManifest(manifest);const {doc,width:measure}=metric();
+  validateManifest(manifest);const WIDTH=manifest.layout.orientation==='landscape'?841.8898:595.2756,HEIGHT=manifest.layout.orientation==='landscape'?595.2756:841.8898;const {doc,width:measure}=metric();
   const l=manifest.layout,font=l.font,margin=l.marginMm*72/25.4;
   const usable=WIDTH-2*margin,gap=24,columnWidth=(usable-gap*(l.columns-1))/l.columns;
   const size=l.fontSize,rowHeight=size*2.8*l.lineSpacing,bottom=HEIGHT-margin-20;
@@ -89,6 +90,7 @@ export function planBook(manifest:BookManifest):BookPlan {
     let page:PlannedPage, column=0,y=margin;
     const newPage=(continued=false)=>{
       page={kind:'song',elements:[]};songs.push(page);column=0;y=margin;
+      if(!continued&&item.category)for(const row of wrap(item.category,columnWidth,10,'sans',measure)){addText(page,row,margin,y,10,'sans','#244F3C');y+=16;}
       const title=continued?`${item.content.title} (continuação)`:item.content.title;
       for(const line of wrap(title,columnWidth,continued?12:18,font,measure)){addText(page,line,margin,y,continued?12:18,font);y+=continued?19:26;}
       const metadata=`${item.content.artist || 'Artista não informado'} · Tom ${item.content.key || '—'} · Capo ${item.content.capo} · ${item.content.meter}${item.content.bpm?` · ${item.content.bpm} BPM`:''}`;
@@ -127,7 +129,7 @@ export function planBook(manifest:BookManifest):BookPlan {
     if(item.notes){ensure(26);for(const line of wrap(`Nota: ${item.notes}`,columnWidth,9,'sans',measure)){ensure(15);addText(page!,line,margin+column*(columnWidth+gap),y,9,'sans','#566157');y+=15;}}
   }
   // Count index pages from actual wrapped titles before assigning physical PDF pages.
-  const tocRows=starts.map(item=>wrap(item.title,usable-52,11,font,measure));
+  const tocRows=starts.map((item,index)=>wrap((manifest.items[index].category?manifest.items[index].category+' · ':'')+item.title,usable-52,11,font,measure));
   const tocPages:PlannedPage[]=[];let toc:PlannedPage,y=margin;
   const newToc=()=>{toc={kind:'index',elements:[]};tocPages.push(toc);y=margin;addText(toc,'Índice',margin,y,24,font);y+=42;};
   newToc();const positions:{page:PlannedPage;y:number;lines:string[]}[]=[];
@@ -156,6 +158,7 @@ export function planBook(manifest:BookManifest):BookPlan {
   doc.end();return {pages,index};
 }
 export async function renderBook(manifest:BookManifest){
+  const WIDTH=manifest.layout.orientation==='landscape'?841.8898:595.2756,HEIGHT=manifest.layout.orientation==='landscape'?595.2756:841.8898;
   const plan=planBook(manifest);const doc=new PDFDocument({autoFirstPage:false,margin:0,compress:true,info:{Title:manifest.title,Author:manifest.organizer,Creator:`StrumLab ${RENDERER_VERSION}`}});register(doc);
   const chunks:Buffer[]=[];const result=new Promise<Buffer>((resolve,reject)=>{doc.on('data',chunk=>chunks.push(chunk));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});
   for(const page of plan.pages){doc.addPage({size:[WIDTH,HEIGHT],margin:0});

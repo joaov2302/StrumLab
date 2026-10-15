@@ -18,8 +18,8 @@ public class BookController {
     @PostMapping("/{id}/items")public Detail add(@PathVariable UUID id,@RequestBody Add add){return books.add(id,add.version(),add.songId(),add.revisionId(),add.duplicate());}
     public record Order(Long version,List<UUID> itemIds){}
     @PutMapping("/{id}/items/order")public Detail order(@PathVariable UUID id,@RequestBody Order order){return books.reorder(id,order.version(),order.itemIds());}
-    public record ItemEdit(Long version,UUID revisionId,String notes){}
-    @PatchMapping("/{id}/items/{itemId}")public Detail item(@PathVariable UUID id,@PathVariable UUID itemId,@RequestBody ItemEdit edit){return books.updateItem(id,edit.version(),itemId,edit.revisionId(),edit.notes());}
+    public record ItemEdit(Long version,UUID revisionId,String notes,String category){}
+    @PatchMapping("/{id}/items/{itemId}")public Detail item(@PathVariable UUID id,@PathVariable UUID itemId,@RequestBody ItemEdit edit){return books.updateItem(id,edit.version(),itemId,edit.revisionId(),edit.notes(),edit.category());}
     public record StrummingEdit(Long version,boolean refresh,Boolean showInPdf){}
     @PatchMapping("/{id}/items/{itemId}/strumming")public Detail strumming(@PathVariable UUID id,@PathVariable UUID itemId,@RequestBody StrummingEdit edit){return books.updateStrumming(id,edit.version(),itemId,edit.refresh(),edit.showInPdf());}
     public record Version(Long version){}
